@@ -52,8 +52,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = gui.cpp 
-OBJECTS       = gui.o
+SOURCES       = source/encyclopedia.cpp \
+		source/convert.cpp \
+		gui.cpp 
+OBJECTS       = encyclopedia.o \
+		convert.o \
+		gui.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -206,7 +210,10 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		gui.pro  gui.cpp
+		gui.pro source/encyclopedia.hpp \
+		source/convert.hpp source/encyclopedia.cpp \
+		source/convert.cpp \
+		gui.cpp
 QMAKE_TARGET  = LineDotDot
 DESTDIR       = 
 TARGET        = LineDotDot
@@ -540,7 +547,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents gui.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.hpp source/convert.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.cpp source/convert.cpp gui.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -590,7 +598,13 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-gui.o: gui.cpp 
+encyclopedia.o: source/encyclopedia.cpp source/encyclopedia.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encyclopedia.o source/encyclopedia.cpp
+
+convert.o: source/convert.cpp source/encyclopedia.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o convert.o source/convert.cpp
+
+gui.o: gui.cpp source/convert.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gui.o gui.cpp
 
 ####### Install

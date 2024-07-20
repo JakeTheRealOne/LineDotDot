@@ -93,7 +93,7 @@ vector<bool> convertToBool(const string& morseLetter, const char longSignal, con
     return letter;
 }
 
-string convertMorse (const string& morse, const char shortSignal, const char longSignal, const string letterSep, const string wordSep) {
+string convertMorse (const string& morse, const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ") {
     string translatedText;
     char character;
     unordered_map<vector<bool>, char>::const_iterator pos;

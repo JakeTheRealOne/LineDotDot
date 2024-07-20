@@ -54,3 +54,7 @@ vector<bool> convertToBool (const string& morseLetter, const char longSignal, co
  * @return string The english text
  */
 string convertMorse (const string& morse, const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ");
+
+int identity (const int i) {
+    return i;
+}
