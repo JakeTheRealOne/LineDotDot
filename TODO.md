@@ -1,0 +1,2 @@
+- fixing convertMorse to add word spaces
+- fixing convertMorse to make it faster (its slow bitch)
