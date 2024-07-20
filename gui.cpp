@@ -10,6 +10,7 @@
  */
 
 
+// #### Qt inclusions: ####
 # include <QApplication>
 # include <QHBoxLayout>
 # include <QMainWindow>
@@ -22,9 +23,17 @@
 # include <QString>
 # include <QTextEdit>
 # include <QLabel>
+
+
+// #### Std inclusions: ####
 # include <string>
-# include "source/convert.hpp"
+# include <iostream>
 using namespace std;
+
+
+// #### Intern inclusions: ####
+# include "source/convert.hpp"
+
 
 class inputBox : public QWidget {
     // Here we have the box where characters are written for translation (base: english)
@@ -117,9 +126,13 @@ private:
         radioButton.setToolTip("open the broadcast center");
         settingsButton.setObjectName("settingsButton");
         textButton.setObjectName("textButton");
+        this->connect(&textButton, &QPushButton::clicked, this, &GUI::switchToTextMode);
         fileButton.setObjectName("fileButton");
+        this->connect(&fileButton, &QPushButton::clicked, this, &GUI::switchToFileMode);
         materialButton.setObjectName("materialButton");
+        this->connect(&materialButton, &QPushButton::clicked, this, &GUI::switchToMaterialMode);
         flashButton.setObjectName("flashButton");
+        this->connect(&flashButton, &QPushButton::clicked, this, &GUI::switchToFlashMode);
     }
 
     void buildStyle () {
@@ -131,7 +144,7 @@ private:
         "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: 0.8em; border: none;}"// border-radius: 0.7em;}"
         "QPushButton:hover {background-color: #454545;}"
 
-        "#warningLabel {color: #FD1D58;}"
+        "#warningLabel {color: #FD1D58; font-size: 16px;}"
 
         "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
         "#settingsButton, #radioButton, #encyclopediaButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
@@ -140,7 +153,7 @@ private:
         "#encyclopediaButton {margin: 0 0.5em 0 0; font-size: 14px;}"
         "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px; padding: 0.2em 0.4em;}"
 
-        "#textButton {border-top-left-radius: 0.7em;}"
+        "#textButton {border-top-left-radius: 0.7em; padding-left: 0.9em; padding-right: 0.8em;}"
         "#textButton, #fileButton, #materialButton, #flashButton {margin: 0.1em;}"
         "#fileButton, #materialButton {font-size: 19px; padding: 0.56em}"
         "#flashButton {border-top-right-radius: 0.7em;}"
@@ -158,17 +171,54 @@ private:
         sbLayout.setAlignment(Qt::AlignHCenter);
         sbLayout.setContentsMargins(0, 0, 0, 0);
         sbLayout.setSpacing(0);
+        switchToTextMode();
         connect(&inputTextBox, &QTextEdit::textChanged, this, &GUI::inputChanged);
+        connect(&swapButton, &QPushButton::clicked, this, &GUI::swapTextBoxes);
     }
 
     // #### Button actions:
     void inputChanged () {
-        const string englishText = this->inputTextBox.toPlainText().toStdString(), letterSep = " ", wordSep = "  ";
+        const string& inputText = this->inputTextBox.toPlainText().toStdString(), letterSep = " ", wordSep = "  ";
         const char longSignal = '-', shortSignal = '.';
-        const QString newQstring = QString::fromStdString(convertText(englishText, shortSignal, longSignal, letterSep, wordSep));
+        const QString newQstring = QString::fromStdString(inputIsMorse ? convertMorse(inputText, shortSignal, longSignal, letterSep, wordSep) : convertText(inputText, shortSignal, longSignal, letterSep, wordSep));
         outputTextBox.setPlainText(newQstring);
-        warningLabel.setVisible(englishText.size() > 300);
+        warningLabel.setVisible(inputText.size() > 300);
         //this->outputTextBox.setPlainText(QString::fromStdString(convertMorse(englishText)));
+    }
+
+    void switchToTextMode () {
+        textButton.setStyleSheet("background-color: #7B7BF3;");
+        fileButton.setStyleSheet("background-color: #2E2E2E");
+        materialButton.setStyleSheet("background-color: #2E2E2E");
+        flashButton.setStyleSheet("background-color: #2E2E2E");
+    }
+
+    void switchToFileMode () {
+        fileButton.setStyleSheet("background-color: #7B7BF3;");
+        textButton.setStyleSheet("background-color: #2E2E2E");
+        materialButton.setStyleSheet("background-color: #2E2E2E");
+        flashButton.setStyleSheet("background-color: #2E2E2E");
+    }
+
+    void switchToMaterialMode () {
+        materialButton.setStyleSheet("background-color: #7B7BF3;");
+        fileButton.setStyleSheet("background-color: #2E2E2E");
+        textButton.setStyleSheet("background-color: #2E2E2E");
+        flashButton.setStyleSheet("background-color: #2E2E2E");
+    }
+
+    void switchToFlashMode () {
+        flashButton.setStyleSheet("background-color: #7B7BF3;");
+        fileButton.setStyleSheet("background-color: #2E2E2E");
+        materialButton.setStyleSheet("background-color: #2E2E2E");
+        textButton.setStyleSheet("background-color: #2E2E2E");
+    }
+
+    void swapTextBoxes () {
+        inputIsMorse = not inputIsMorse;
+        const QString previousInput = inputTextBox.toPlainText();
+        inputTextBox.setPlainText(outputTextBox.toPlainText());
+        outputTextBox.setPlainText(previousInput);
     }
 };
 
