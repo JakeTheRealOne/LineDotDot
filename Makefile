@@ -606,13 +606,15 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-object/encyclopedia.o: source/encyclopedia.cpp 
+object/encyclopedia.o: source/encyclopedia.cpp header/encyclopedia.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/encyclopedia.o source/encyclopedia.cpp
 
 object/settings.o: source/settings.cpp header/settings.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/settings.o source/settings.cpp
 
-object/convert.o: source/convert.cpp 
+object/convert.o: source/convert.cpp header/convert.hpp \
+		header/settings.hpp \
+		header/encyclopedia.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/convert.o source/convert.cpp
 
 object/gui.o: source/gui.cpp header/gui.hpp \

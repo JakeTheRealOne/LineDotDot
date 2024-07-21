@@ -6,12 +6,14 @@ const int NUM_CHARACTERS = 10000000;
 const char CHARACTERS[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.?,;=()";
 const int CHARSET_SIZE = sizeof(CHARACTERS) - 1;  // Exclude the null terminator
 
-char getRandomCharacter() {
-    return CHARACTERS[rand() % CHARSET_SIZE];
+char getRandomCharacter()
+{
+  return CHARACTERS[rand() % CHARSET_SIZE];
 }
 
-int main() {
-    std::srand(static_cast<unsigned int>(std::time(0)));
+void longFormatTest()
+{
+  std::srand(static_cast<unsigned int>(std::time(0)));
 
     string myString;
 
@@ -34,6 +36,10 @@ int main() {
 
     // Affichage du temps d'exécution en secondes
     cout << "Runtime: " << duration.count() << " secondes" << endl;
+
+}
+
+int main() {
 
     return 0;
 }

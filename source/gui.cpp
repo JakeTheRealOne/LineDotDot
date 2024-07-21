@@ -24,6 +24,10 @@
 # include <QTextEdit>
 # include <QVBoxLayout>
 # include <QWidget>
+# include <QPropertyAnimation>
+# include <QTransform>
+# include <QRect>
+# include <QGraphicsRotation>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -42,6 +46,7 @@ GUI::GUI()
   buildBars();
   buildLayouts();
   buildTranslateBox();
+  buildAnimations();
 };
 
 
@@ -188,6 +193,20 @@ void GUI::buildTranslateBox()
 }
 
 
+void GUI::buildAnimations()
+{
+  swapAnimation.setDuration(5000);
+  swapAnimation.setStartValue("QPushButton {color: red;}");
+  swapAnimation.setEndValue("QPushButton {color: green;}");
+}
+
+
+void GUI::animateSwapButton()
+{
+  swapAnimation.start();
+}
+
+
 void GUI::inputChanged()
 {
   const string& inputText = this->inputTextBox.toPlainText().toStdString();
@@ -197,7 +216,7 @@ void GUI::inputChanged()
   int scrollPosition = outputTextBox.verticalScrollBar()->value();
   outputTextBox.setPlainText(newQstring);
   outputTextBox.verticalScrollBar()->setValue(scrollPosition);
-  warningLabel.setVisible(inputText.size() > 300);
+  warningLabel.setVisible((inputIsMorse ? newQstring.toStdString().size() : inputText.size()) > 1000);
 }
 
 
@@ -263,6 +282,7 @@ void GUI::switchToFlashMode()
 
 void GUI::swapTextBoxes()
 {
+  swapAnimation.start();
   inputIsMorse = not inputIsMorse;
   const QString previousInput = inputTextBox.toPlainText();
 

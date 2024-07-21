@@ -28,6 +28,7 @@
 # include <QTextEdit>
 # include <QVBoxLayout>
 # include <QWidget>
+# include <QPropertyAnimation>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -76,6 +77,8 @@ private:
   QTextEdit inputTextBox, outputTextBox;
   QLabel warningLabel =
     QLabel("File mode is recommended for processing large amounts of data.");
+  QPropertyAnimation swapAnimation = QPropertyAnimation(&swapButton, "styleSheet");
+
   bool inputIsMorse = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
@@ -113,8 +116,19 @@ private:
    */
   void buildTranslateBox();
 
+  /**
+   * @brief Build the animations of the GUI
+   * 
+   */
+  void buildAnimations();
 
-  // #### Button actions:
+  /**
+   * @brief Run the swapButton animation (360° rotation)
+   * 
+   */
+  void animateSwapButton();
+
+  // #### Button actions: ####
 
   /**
    * @brief Action executed when the inputBox content changes
