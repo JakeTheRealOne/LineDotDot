@@ -4,6 +4,7 @@
 # include <iostream>
 using namespace std;
 
+# include "convert.hpp"
 # include "encyclopedia.hpp"
 # include "settings.hpp"
 
@@ -11,11 +12,9 @@ using namespace std;
 const unordered_map<char, vector<bool>> charToMorse = buildCTM();
 const unordered_map<vector<bool>, char> morseToChar = buildMTC();
 
-class Encoder {};
 
-class Decoder {};
-
-string convertText (const string& text, const ConversionSettings& settings = ConversionSettings()) {
+string Encoder::convert (const string& text, const ConversionSettings& settings)
+{
     string morseCode;
     char character;
     unordered_map<char, vector<bool>>::const_iterator pos;
@@ -48,43 +47,8 @@ string convertText (const string& text, const ConversionSettings& settings = Con
     return morseCode;
 }
 
-int endOfLetter(const string& morse, int index, const ConversionSettings& settings)
-{
-    int n = morse.size(), offset = 0;
-    for (const char character : settings.letterSep())
-    {
-        if (index < n and morse[index] == character)
-        {
-            ++ index;
-            ++ offset;
-        } else
-        {
-            return 0;
-        }
-    }
-    return offset;
-}
 
-
-int endOfWord(const string& morse, int index, const ConversionSettings& settings)
-{
-    int n = morse.size(), offset = 0;
-    for (const char character : settings.wordSep())
-    {
-        if (index < n and morse[index] == character)
-        {
-            ++ index;
-            ++ offset;
-        } else
-        {
-            return 0;
-        }
-    }
-    return offset;
-}
-
-
-string convertMorse (const string& morse, const ConversionSettings& settings = ConversionSettings()) {
+string Decoder::convert (const string& morse, const ConversionSettings& settings) {
     string convertedText;
     int n = morse.size(), offset;
     vector<bool> currentLetter;
@@ -155,4 +119,40 @@ string convertMorse (const string& morse, const ConversionSettings& settings = C
         currentLetter.clear();
     }
     return convertedText;
+}
+
+
+int Decoder::endOfWord(const string& morse, int index, const ConversionSettings& settings)
+{
+    int n = morse.size(), offset = 0;
+    for (const char character : settings.wordSep())
+    {
+        if (index < n and morse[index] == character)
+        {
+            ++ index;
+            ++ offset;
+        } else
+        {
+            return 0;
+        }
+    }
+    return offset;
+}
+
+
+int Decoder::endOfLetter(const string& morse, int index, const ConversionSettings& settings)
+{
+    int n = morse.size(), offset = 0;
+    for (const char character : settings.letterSep())
+    {
+        if (index < n and morse[index] == character)
+        {
+            ++ index;
+            ++ offset;
+        } else
+        {
+            return 0;
+        }
+    }
+    return offset;
 }
