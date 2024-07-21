@@ -124,34 +124,48 @@ void GUI::buildStyle()
 {
   this->setMinimumSize(400, 400);
   this->setStyleSheet(
-      "QWidget {color: #FFFFFF; background-color: #242424;}"
-      "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
-      "solid #FFFFFF; border-radius: 0.3em; padding: 0.1em;}"
-      "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0 "
-      "0.5em; border-radius: 0.71em; padding: 0.5em;}"
-      "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
-      "0.8em; border: none;}"
-      "QPushButton:hover {background-color: #454545;}"
-      "QScrollBar {border: none; color: #000000; background-color: #242424;}"
+    "QWidget {color: #FFFFFF; background-color: #242424;}"
+    "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
+    "solid #FFFFFF; border-radius: 0.3em; padding: 0.1em;}"
+    "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0 "
+    "0.5em; border-radius: 0.35em; padding: 0.5em;}"
+    "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
+    "0.8em; border: none;}"
+    "QPushButton:hover {background-color: #454545;}"
+    "QScrollBar {border: none; color: #000000; background-color: #242424;}"
 
-      "#warningLabel {color: #FD1D58; font-size: 16px;}"
+    "#warningLabel {color: #FD1D58; font-size: 16px;}"
 
-      "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
-      "#settingsButton, #radioButton, #encyclopediaButton {border-radius: "
-      "0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
-      "#settingsButton:hover, #radioButton:hover, #encyclopediaButton:hover "
-      "{background-color: #2D2D2D;}"
-      "#settingsButton {margin: 0 0.5em 0 0;}"
-      "#encyclopediaButton {margin: 0 0.5em 0 0; font-size: 14px;}"
-      "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px; "
-      "padding: 0.2em 0.4em;}"
+    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
+    "#settingsButton, #radioButton, #encyclopediaButton {border-radius: "
+    "0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
+    "#settingsButton:hover, #radioButton:hover, #encyclopediaButton:hover "
+    "{background-color: #2D2D2D;}"
+    "#settingsButton {margin: 0 0.5em 0 0;}"
+    "#encyclopediaButton {margin: 0 0.5em 0 0; font-size: 14px;}"
+    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px; "
+    "padding: 0.2em 0.4em;}"
 
-      "#textButton {border-top-left-radius: 0.7em; padding-left: 0.9em; "
-      "padding-right: 0.8em;}"
-      "#textButton, #fileButton, #materialButton, #flashButton {margin: "
-      "0.1em;}"
-      "#fileButton, #materialButton {font-size: 19px; padding: 0.56em}"
-      "#flashButton {border-top-right-radius: 0.7em;}");
+    "#textButton, #fileButton, #materialButton, #flashButton {margin: "
+    "0.1em;}"
+    "#textButton {border-top-left-radius: 0.7em;}"
+    "#fileButton, #materialButton {font-size: 19px; padding: 0.56em}"
+    "#flashButton {border-top-right-radius: 0.7em;}"
+);
+
+  int bottomButtonSize = 55;
+
+  textButton.setFixedWidth(bottomButtonSize);
+  textButton.setFixedHeight(bottomButtonSize);
+
+  fileButton.setFixedWidth(bottomButtonSize);
+  fileButton.setFixedHeight(bottomButtonSize);
+
+  materialButton.setFixedWidth(bottomButtonSize);
+  materialButton.setFixedHeight(bottomButtonSize);
+
+  flashButton.setFixedWidth(bottomButtonSize);
+  flashButton.setFixedHeight(bottomButtonSize);
 }
 
 
@@ -176,9 +190,7 @@ void GUI::buildTranslateBox()
 
 void GUI::inputChanged()
 {
-  const string &inputText = this->inputTextBox.toPlainText().toStdString(),
-                letterSep = " ", wordSep = "  ";
-  const char longSignal = '-', shortSignal = '.';
+  const string& inputText = this->inputTextBox.toPlainText().toStdString();
   const QString newQstring = QString::fromStdString(
       inputIsMorse ? Decoder::convert(inputText) : Encoder::convert(inputText)
   );
@@ -197,10 +209,10 @@ void GUI::switchToTextMode()
   }
   currentMode = 0;
 
-  textButton.setStyleSheet("background-color: #724DC7;");
-  fileButton.setStyleSheet("background-color: #2E2E2E");
-  materialButton.setStyleSheet("background-color: #2E2E2E");
-  flashButton.setStyleSheet("background-color: #2E2E2E");
+  textButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
+  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 }
 
 
@@ -212,10 +224,10 @@ void GUI::switchToFileMode()
   }
   currentMode = 1;
 
-  fileButton.setStyleSheet("background-color: #724DC7;");
-  textButton.setStyleSheet("background-color: #2E2E2E");
-  materialButton.setStyleSheet("background-color: #2E2E2E");
-  flashButton.setStyleSheet("background-color: #2E2E2E");
+  fileButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
+  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 }
 
 
@@ -227,10 +239,10 @@ void GUI::switchToMaterialMode()
   }
   currentMode = 2;
 
-  materialButton.setStyleSheet("background-color: #724DC7;");
-  fileButton.setStyleSheet("background-color: #2E2E2E");
-  textButton.setStyleSheet("background-color: #2E2E2E");
-  flashButton.setStyleSheet("background-color: #2E2E2E");
+  materialButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
+  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 }
 
 
@@ -242,10 +254,10 @@ void GUI::switchToFlashMode()
   }
   currentMode = 3;
 
-  flashButton.setStyleSheet("background-color: #724DC7;");
-  fileButton.setStyleSheet("background-color: #2E2E2E");
-  materialButton.setStyleSheet("background-color: #2E2E2E");
-  textButton.setStyleSheet("background-color: #2E2E2E");
+  flashButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
+  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 }
 
 
