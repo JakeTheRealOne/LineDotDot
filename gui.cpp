@@ -217,8 +217,14 @@ private:
     void swapTextBoxes () {
         inputIsMorse = not inputIsMorse;
         const QString previousInput = inputTextBox.toPlainText();
-        inputTextBox.setPlainText(outputTextBox.toPlainText());
-        outputTextBox.setPlainText(previousInput);
+
+        if (inputIsMorse) {
+            inputTextBox.setPlainText(outputTextBox.toPlainText());
+            outputTextBox.setPlainText(previousInput.toLower());
+        } else {
+            inputTextBox.setPlainText(outputTextBox.toPlainText().toLower());
+            outputTextBox.setPlainText(previousInput);
+        }
     }
 };
 

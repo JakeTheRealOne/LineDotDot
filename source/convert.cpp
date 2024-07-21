@@ -109,6 +109,8 @@ string convertMorse (const string& morse, const char shortSignal = '.', const ch
                 translatedText.push_back(pos->second);
             }
         }
+        translatedText.push_back(' ');
     }
+    translatedText.pop_back();
     return translatedText;
 }
