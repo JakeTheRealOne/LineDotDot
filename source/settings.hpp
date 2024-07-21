@@ -34,7 +34,7 @@ public:
      * @param shortSignal The character representing the short signal
      * @param longSignal The character representing the long signal
      */
-    ConversionSettings (const char shortSignal = '.', const char longSignal = '-') noexcept;
+    ConversionSettings (const char shortSignal, const char longSignal) noexcept;
 
     /**
      * @brief Construct a new ConversionSettings object (full constructor)
@@ -44,7 +44,7 @@ public:
      * @param letterSep The string that will separe each letter
      * @param wordSep The string that will separe each word
      */
-    ConversionSettings (const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ");
+    ConversionSettings (const char shortSignal, const char longSignal, const string& letterSep, const string& wordSep);
 
     /**
      * @brief Destroy the ConversionSettings object

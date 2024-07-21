@@ -15,27 +15,31 @@ class Encoder {};
 
 class Decoder {};
 
-string convertText (const string& text, const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ") {
+string convertText (const string& text, const ConversionSettings& settings = ConversionSettings()) {
     string morseCode;
     char character;
     unordered_map<char, vector<bool>>::const_iterator pos;
-    for (int i = 0; i < text.size(); ++ i) {
+    for (int i = 0; i < text.size(); ++ i)
+    {
         character = text[i];
-        if (character == '\n'){
-            morseCode.push_back(character);
-        } else if (character != ' ') {
+        if (character != ' ' and character != '\n') {
             pos = charToMorse.find(tolower(character));
             if (pos == charToMorse.end()){
                 cout << "[WRN] ignoring {" << string(1, character) << "}, which cannot be converted to Morse Code" << endl;
             } else {
                 for (bool signal : pos->second){
-                    signal ? morseCode.push_back(longSignal) : morseCode.push_back(shortSignal);
+                    signal ? morseCode.push_back(settings.longSignal()) : morseCode.push_back(settings.shortSignal());
                 }
                 if (i < text.size() - 1){
-                    if (text[i + 1] == ' '){
-                        morseCode += wordSep;
+                    if (text[i + 1] == '\n')
+                    {
+                        morseCode += '\n';
+                    }
+                    else if (text[i + 1] == ' ')
+                    {
+                        morseCode += settings.wordSep();
                     } else {
-                        morseCode += letterSep;
+                        morseCode += settings.letterSep();
                     }
                 }
             }
@@ -44,79 +48,111 @@ string convertText (const string& text, const char shortSignal = '.', const char
     return morseCode;
 }
 
-vector<string> splitWord(const string& word, const string& letterSep) {
-    vector<string> splitted;
-    string letter;
-    int i = 0, j = word.find(letterSep, i), n = word.size(), m = letterSep.size();
-    while (j != -1) {
-        // separe letters of morse[i:j]
-        letter = word.substr(i, j - i);
-        splitted.push_back(letter);
-        i = j + m;
-        j = word.find(letterSep, i);
-
-    } if (i != n) {
-        letter = word.substr(i, j - i);
-        splitted.push_back(letter);
+int endOfLetter(const string& morse, int index, const ConversionSettings& settings)
+{
+    int n = morse.size(), offset = 0;
+    for (const char character : settings.letterSep())
+    {
+        if (index < n and morse[index] == character)
+        {
+            ++ index;
+            ++ offset;
+        } else
+        {
+            return 0;
+        }
     }
-    return splitted;
+    return offset;
 }
 
-vector<vector<string>> splitMorse(const string& morse, const string& letterSep, const string& wordSep) {
-    vector<vector<string>> splitted;
-    int i = 0, j = morse.find(wordSep, 0), n = morse.size(), m = wordSep.size();
-    string word;
-    while (j != -1) {
-        // separe letters of morse[i:j]
-        word = morse.substr(i, j - i);
-        splitted.push_back(splitWord(word, letterSep));
-        i = j + m;
-        j = morse.find(wordSep, i);
 
-    } if (i != n) {
-        word = morse.substr(i, j - i);
-        splitted.push_back(splitWord(word, letterSep));
+int endOfWord(const string& morse, int index, const ConversionSettings& settings)
+{
+    int n = morse.size(), offset = 0;
+    for (const char character : settings.wordSep())
+    {
+        if (index < n and morse[index] == character)
+        {
+            ++ index;
+            ++ offset;
+        } else
+        {
+            return 0;
+        }
     }
-    return splitted;
-};
+    return offset;
+}
 
-vector<bool> convertToBool(const string& morseLetter, const char longSignal, const char shortSignal) {
-    vector<bool> letter;
-    letter.reserve(morseLetter.size());
-    for (const char signal : morseLetter) {
-        if (signal == longSignal) {
-                letter.push_back(true);
-        } else if (signal == shortSignal) {
-                letter.push_back(false);
+
+string convertMorse (const string& morse, const ConversionSettings& settings = ConversionSettings()) {
+    string convertedText;
+    int n = morse.size(), offset;
+    vector<bool> currentLetter;
+    for (int i = 0; i < n; ++ i)
+    {
+        if (morse[i] == settings.shortSignal())
+        {
+            currentLetter.push_back(0);
+        } else if (morse[i] == settings.longSignal())
+        {
+            currentLetter.push_back(1);
         } else {
-                cout << "[WRN] ignoring {" << string(1, signal) << "}, which is unlisted in the conversion settings" << endl;
-        }
-    }
-    return letter;
-}
-
-string convertMorse (const string& morse, const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ") {
-    string translatedText;
-    char character;
-    unordered_map<vector<bool>, char>::const_iterator pos;
-    vector<vector<string>> morseWords = splitMorse(morse, letterSep, wordSep);
-    vector<bool> morseLetter;
-    for (const vector<string>& word : morseWords) {
-        for (const string& letter : word) {
-            morseLetter = convertToBool(letter, longSignal, shortSignal);
-            pos = morseToChar.find(morseLetter);
-            if (pos == morseToChar.end()) {
-                cout << "[WRN] ignoring {" << letter << "}, which is not a morse character" << endl;
-            } else {
-                translatedText.push_back(pos->second);
+            offset = endOfWord(morse, i, settings);
+            if (offset or morse[i] == '\n')
+            {
+                i += (morse[i] == '\n' ? offset : offset - 1);
+                const auto& pos = morseToChar.find(currentLetter);
+                if (pos != morseToChar.end())
+                {
+                    convertedText.push_back(pos->second);
+                } else {
+                    cout << "[WRN] ignoring [";
+                    for (const bool signal : currentLetter)
+                    {
+                        cout << (signal ? settings.longSignal() : settings.shortSignal());
+                    }
+                    cout << "], is a not a morse letter" << endl;
+                }
+                currentLetter.clear();
+                convertedText.push_back(morse[i] == '\n' ? '\n' : ' ');
+                continue;
             }
+            offset = endOfLetter(morse, i, settings);
+            if (offset)
+            {
+                i += offset - 1;
+                const auto& pos = morseToChar.find(currentLetter);
+                if (pos != morseToChar.end())
+                {
+                    convertedText.push_back(pos->second);
+                } else {
+                    cout << "[WRN] ignoring [";
+                    for (const bool signal : currentLetter)
+                    {
+                        cout << (signal ? settings.longSignal() : settings.shortSignal());
+                    }
+                    cout << "], is a not a morse letter" << endl;
+                }
+                currentLetter.clear();
+                continue;
+            }
+            cout << "[WRN] ignoring {" << morse[i] << "}, unlisted in conversion settings" << endl;
         }
-        translatedText.push_back(' ');
+    } if (currentLetter.size()) 
+    {
+        const auto& pos = morseToChar.find(currentLetter);
+        if (pos != morseToChar.end())
+        {
+            convertedText.push_back(pos->second);
+        } else {
+            cout << "[WRN] ignoring [";
+            for (const bool signal : currentLetter)
+            {
+                cout << (signal ? settings.longSignal() : settings.shortSignal());
+            }
+            cout << "], is a not a morse letter" << endl;
+        }
+        currentLetter.clear();
     }
-    translatedText.pop_back();
-    return translatedText;
-}
-
-string convertMorse (const string& morse, const ConversionSettings& settings) {
-    return "";
+    return convertedText;
 }

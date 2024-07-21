@@ -53,9 +53,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = source/encyclopedia.cpp \
+		source/settings.cpp \
 		source/convert.cpp \
-		gui.cpp 
+		source/gui.cpp 
 OBJECTS       = encyclopedia.o \
+		settings.o \
 		convert.o \
 		gui.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -211,9 +213,11 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		gui.pro source/encyclopedia.hpp \
+		source/settings.hpp \
 		source/convert.hpp source/encyclopedia.cpp \
+		source/settings.cpp \
 		source/convert.cpp \
-		gui.cpp
+		source/gui.cpp
 QMAKE_TARGET  = LineDotDot
 DESTDIR       = 
 TARGET        = LineDotDot
@@ -547,8 +551,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents source/encyclopedia.hpp source/convert.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents source/encyclopedia.cpp source/convert.cpp gui.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.hpp source/settings.hpp source/convert.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.cpp source/settings.cpp source/convert.cpp source/gui.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -601,11 +605,16 @@ compiler_clean: compiler_moc_predefs_clean
 encyclopedia.o: source/encyclopedia.cpp source/encyclopedia.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encyclopedia.o source/encyclopedia.cpp
 
-convert.o: source/convert.cpp source/encyclopedia.hpp
+settings.o: source/settings.cpp source/settings.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o settings.o source/settings.cpp
+
+convert.o: source/convert.cpp source/encyclopedia.hpp \
+		source/settings.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o convert.o source/convert.cpp
 
-gui.o: gui.cpp source/convert.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gui.o gui.cpp
+gui.o: source/gui.cpp source/convert.hpp \
+		source/settings.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gui.o source/gui.cpp
 
 ####### Install
 

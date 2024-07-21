@@ -81,9 +81,9 @@ void ConversionSettings::setLongSignal(const char newLongSignal)
 
 void ConversionSettings::setLetterSep(const string& newLetterSep)
 {
-    if (newLetterSep.size() > 16)
+    if (newLetterSep.empty() or newLetterSep.size() > 16)
     {
-        cout << "[ERR] the maximum size of the letter separator is 16 characters" << endl;
+        cout << "[ERR] word separator size must be between 1 and 16 characters" << endl;
     } else if (newLetterSep == _wordSep)
     {
         cout << "[ERR] the new letter separator is identical to the word separator" << endl;
@@ -102,9 +102,9 @@ void ConversionSettings::setLetterSep(const string& newLetterSep)
 
 void ConversionSettings::setWordSep(const string& newWordSep)
 {
-    if (newWordSep.size() > 32)
+    if (newWordSep.empty() or newWordSep.size() > 32)
     {
-        cout << "[ERR] the maximum size of the word separator is 32 characters" << endl;
+        cout << "[ERR] word separator size must be between 1 and 32" << endl;
     } else if (newWordSep == _letterSep)
     {
         cout << "[ERR] the new word separator is identical to the letter separator" << endl;
@@ -130,7 +130,7 @@ void ConversionSettings::reset() noexcept
 }
 
 
-ConversionSettings::operator==(const ConversionSettings& other) const noexcept {
+bool ConversionSettings::operator==(const ConversionSettings& other) const noexcept {
     return (
         _shortSignal == other._shortSignal
         and
@@ -140,4 +140,11 @@ ConversionSettings::operator==(const ConversionSettings& other) const noexcept {
         and
         _wordSep == other._wordSep
     );
+}
+
+
+ostream& operator<<(ostream& stream, const ConversionSettings& me) noexcept
+{
+    stream << "ConversionSettings({" << me._shortSignal << "}, {" << me._longSignal << "}, [" << me._letterSep << "], [" << me._wordSep << "]";
+    return stream;
 }
