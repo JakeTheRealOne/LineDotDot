@@ -23,6 +23,7 @@
 # include <QString>
 # include <QTextEdit>
 # include <QLabel>
+# include <QScrollBar>
 
 
 // #### Std inclusions: ####
@@ -143,6 +144,7 @@ private:
         "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0 0.5em; border-radius: 0.71em; padding: 0.5em;}"
         "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: 0.8em; border: none;}"// border-radius: 0.7em;}"
         "QPushButton:hover {background-color: #454545;}"
+        "QScrollBar {border: none; color: #000000; background-color: #242424;}"
 
         "#warningLabel {color: #FD1D58; font-size: 16px;}"
 
@@ -166,6 +168,7 @@ private:
         warningLabel.setAlignment(Qt::AlignHCenter);
         warningLabel.setObjectName("warningLabel");
         warningLabel.setVisible(false);
+        warningLabel.setWordWrap(true);
         switchBox.setLayout(&sbLayout);
         sbLayout.addWidget(&swapButton);
         sbLayout.setAlignment(Qt::AlignHCenter);
@@ -181,7 +184,9 @@ private:
         const string& inputText = this->inputTextBox.toPlainText().toStdString(), letterSep = " ", wordSep = "  ";
         const char longSignal = '-', shortSignal = '.';
         const QString newQstring = QString::fromStdString(inputIsMorse ? convertMorse(inputText, shortSignal, longSignal, letterSep, wordSep) : convertText(inputText, shortSignal, longSignal, letterSep, wordSep));
+        int scrollPosition = outputTextBox.verticalScrollBar()->value();
         outputTextBox.setPlainText(newQstring);
+        outputTextBox.verticalScrollBar()->setValue(scrollPosition);
         warningLabel.setVisible(inputText.size() > 300);
         //this->outputTextBox.setPlainText(QString::fromStdString(convertMorse(englishText)));
     }

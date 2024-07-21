@@ -2,8 +2,10 @@
 # include <unordered_map>
 # include <vector>
 # include <iostream>
-# include "encyclopedia.hpp"
 using namespace std;
+
+# include "encyclopedia.hpp"
+# include "settings.hpp"
 
 
 const unordered_map<char, vector<bool>> charToMorse = buildCTM();
@@ -113,4 +115,8 @@ string convertMorse (const string& morse, const char shortSignal = '.', const ch
     }
     translatedText.pop_back();
     return translatedText;
+}
+
+string convertMorse (const string& morse, const ConversionSettings& settings) {
+    return "";
 }

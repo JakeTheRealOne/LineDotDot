@@ -1,2 +1,3 @@
 - fixing convertMorse to add word spaces
 - fixing convertMorse to make it faster (its slow bitch)
+- Adding a dynamic programmation to the converter

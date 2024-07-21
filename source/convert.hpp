@@ -1,6 +1,12 @@
+# ifndef CONVERT_HPP
+# define CONVERT_HPP
+
+
 # include <string>
 # include <vector>
 using namespace std;
+
+# include "settings.hpp"
 
 /**
  * @brief Convert an english text to morse code
@@ -55,6 +61,14 @@ vector<bool> convertToBool (const string& morseLetter, const char longSignal, co
  */
 string convertMorse (const string& morse, const char shortSignal = '.', const char longSignal = '-', const string& letterSep = " ", const string& wordSep = "  ");
 
-int identity (const int i) {
-    return i;
-}
+/**
+ * @brief Convert a morse text into an english text
+ * 
+ * @param morse The morse text
+ * @param settings The settings of conversion
+ * @return string The english text
+ */
+string convertMorse (const string& morse, const ConversionSettings& settings);
+
+
+# endif
