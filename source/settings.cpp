@@ -10,12 +10,14 @@
  */
 
 
-
+// #### Std inclusions: ####
 # include <algorithm>
 # include <iostream>
 # include <string>
-# include "settings.hpp"
 using namespace std;
+
+// #### Intern inclusions: ####
+# include "../header/settings.hpp"
 
 
 ConversionSettings::ConversionSettings

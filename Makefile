@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = LineDotDot1.0.0
-DISTDIR = /home/B612/Devloper/LineDotDot/.tmp/LineDotDot1.0.0
+DISTDIR = /home/B612/Devloper/LineDotDot/object/LineDotDot1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1 -pipe -O2 -flto=12 -fno-fat-lto-objects -fuse-linker-plugin -fPIC
 LIBS          = $(SUBLIBS) /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
@@ -48,18 +48,20 @@ STRIP         = strip
 
 ####### Output directory
 
-OBJECTS_DIR   = ./
+OBJECTS_DIR   = object/
 
 ####### Files
 
 SOURCES       = source/encyclopedia.cpp \
 		source/settings.cpp \
 		source/convert.cpp \
-		source/gui.cpp 
-OBJECTS       = encyclopedia.o \
-		settings.o \
-		convert.o \
-		gui.o
+		source/gui.cpp \
+		source/main.cpp 
+OBJECTS       = object/encyclopedia.o \
+		object/settings.o \
+		object/convert.o \
+		object/gui.o \
+		object/main.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -212,12 +214,14 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		gui.pro source/encyclopedia.hpp \
-		source/settings.hpp \
-		source/convert.hpp source/encyclopedia.cpp \
+		gui.pro header/encyclopedia.hpp \
+		header/settings.hpp \
+		header/convert.hpp \
+		header/gui.hpp source/encyclopedia.cpp \
 		source/settings.cpp \
 		source/convert.cpp \
-		source/gui.cpp
+		source/gui.cpp \
+		source/main.cpp
 QMAKE_TARGET  = LineDotDot
 DESTDIR       = 
 TARGET        = LineDotDot
@@ -551,8 +555,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents source/encyclopedia.hpp source/settings.hpp source/convert.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents source/encyclopedia.cpp source/settings.cpp source/convert.cpp source/gui.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/convert.hpp header/gui.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.cpp source/settings.cpp source/convert.cpp source/gui.cpp source/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -602,19 +606,24 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-encyclopedia.o: source/encyclopedia.cpp source/encyclopedia.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o encyclopedia.o source/encyclopedia.cpp
+object/encyclopedia.o: source/encyclopedia.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/encyclopedia.o source/encyclopedia.cpp
 
-settings.o: source/settings.cpp source/settings.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o settings.o source/settings.cpp
+object/settings.o: source/settings.cpp header/settings.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/settings.o source/settings.cpp
 
-convert.o: source/convert.cpp source/encyclopedia.hpp \
-		source/settings.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o convert.o source/convert.cpp
+object/convert.o: source/convert.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/convert.o source/convert.cpp
 
-gui.o: source/gui.cpp source/convert.hpp \
-		source/settings.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gui.o source/gui.cpp
+object/gui.o: source/gui.cpp header/gui.hpp \
+		header/convert.hpp \
+		header/settings.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui.o source/gui.cpp
+
+object/main.o: source/main.cpp header/gui.hpp \
+		header/convert.hpp \
+		header/settings.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/main.o source/main.cpp
 
 ####### Install
 

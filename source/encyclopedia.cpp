@@ -13,11 +13,12 @@
 # include <string>
 # include <unordered_map>
 # include <vector>
-# include "encyclopedia.hpp"
+# include "../header/encyclopedia.hpp"
 using namespace std;
 
 
-const unordered_map<char, vector<string>> ALPHABET = {
+const unordered_map<char, vector<string>> ALPHABET = 
+{
     {'a', {".-", "Alfa"}},      {'b', {"-...", "Bravo"}},
     {'c', {"-.-.", "Charlie"}}, {'d', {"-..", "Delta"}},
     {'e', {".", "Echo"}},       {'f', {"..-.", "Foxtrot"}},
@@ -36,8 +37,10 @@ const unordered_map<char, vector<string>> ALPHABET = {
 };
 
 
-unordered_map<char, vector<bool>> buildCTM () {
-    const unordered_map<char, vector<bool>> alphaToMorse = {
+unordered_map<char, vector<bool>> buildCTM()
+{
+    const unordered_map<char, vector<bool>> alphaToMorse =
+    {
     {'a', {0, 1}}, {'b', {1, 0, 0, 0}},
     {'c', {1, 0, 1, 0}}, {'d', {1, 0, 0}},
     {'e', {0}}, {'f', {0, 0, 1, 0}},
@@ -53,7 +56,8 @@ unordered_map<char, vector<bool>> buildCTM () {
     {'y', {1, 0, 1, 1}}, {'z', {1, 1, 0, 0}},
     };
 
-    const unordered_map<char, vector<bool>> decimalToMorse = {
+    const unordered_map<char, vector<bool>> decimalToMorse =
+    {
         {'0', {1, 1, 1, 1, 1}},
         {'1', {0, 1, 1, 1, 1}},
         {'2', {0, 0, 1, 1, 1}},
@@ -66,7 +70,8 @@ unordered_map<char, vector<bool>> buildCTM () {
         {'9', {1, 1, 1, 1, 0}},
     };
 
-    const unordered_map<char, vector<bool>> specharToMorse = {
+    const unordered_map<char, vector<bool>> specharToMorse =
+    {
     {',', {1, 1, 0, 0, 1, 1}}, {'.', {0, 1, 0, 1, 0, 1}},
     {'?', {0, 0, 1, 1, 0, 0}}, {';', {1, 0, 1, 0, 1, 0}},
     {':', {1, 1, 1, 0, 0, 0}}, {'/', {1, 0, 0, 1, 0}},
@@ -80,21 +85,24 @@ unordered_map<char, vector<bool>> buildCTM () {
 
 
     unordered_map<char, vector<bool>> characterToMorse;
-    for (const pair<char, vector<bool>>& letter : alphaToMorse) {
+    for (const pair<char, vector<bool>>& letter : alphaToMorse)
+    {
         characterToMorse.insert(letter);
-    }
-    for (const pair<char, vector<bool>>& num : decimalToMorse) {
+    } for (const pair<char, vector<bool>>& num : decimalToMorse)
+    {
         characterToMorse.insert(num);
-    }
-    for (const pair<char, vector<bool>>& special : specharToMorse) {
+    } for (const pair<char, vector<bool>>& special : specharToMorse)
+    {
         characterToMorse.insert(special);
     }
     return characterToMorse;
 }
 
 
-unordered_map<vector<bool>, char> buildMTC () {
-    const unordered_map<vector<bool>, char> morseToAlpha = {
+unordered_map<vector<bool>, char> buildMTC()
+{
+    const unordered_map<vector<bool>, char> morseToAlpha =
+    {
         {{0,1,}, 'a'}, {{1,0,0,0,}, 'b'},
         {{1,0,1,0,}, 'c'}, {{1,0,0,}, 'd'},
         {{0,}, 'e'}, {{0,0,1,0,}, 'f'},
@@ -110,7 +118,8 @@ unordered_map<vector<bool>, char> buildMTC () {
         {{1,0,1,1,}, 'y'}, {{1,1,0,0,}, 'z'},
     };
 
-    const unordered_map<vector<bool>, char> morseToDecimal = {
+    const unordered_map<vector<bool>, char> morseToDecimal =
+    {
         {{1,1,1,1,1,}, '0'}, {{0,1,1,1,1,}, '1'},
         {{0,0,1,1,1,}, '2'}, {{0,0,0,1,1,}, '3'},
         {{0,0,0,0,1,}, '4'}, {{0,0,0,0,0,}, '5'},
@@ -118,7 +127,8 @@ unordered_map<vector<bool>, char> buildMTC () {
         {{1,1,1,0,0,}, '8'}, {{1,1,1,1,0,}, '9'},
     };
 
-    const unordered_map<vector<bool>, char> morseToSpechar = {
+    const unordered_map<vector<bool>, char> morseToSpechar =
+    {
         {{0, 0, 0, 1, 0, 0, 1}, '$'},
         {{0, 1, 0, 1, 0}, '+'},
         {{1, 0, 0, 0, 1}, '='},
@@ -140,13 +150,14 @@ unordered_map<vector<bool>, char> buildMTC () {
     };
 
     unordered_map<vector<bool>, char> morseToCharacter;
-    for (const pair<vector<bool>, char>& letter : morseToAlpha) {
+    for (const pair<vector<bool>, char>& letter : morseToAlpha)
+    {
         morseToCharacter.insert(letter);
-    }
-    for (const pair<vector<bool>, char>& num : morseToDecimal) {
+    } for (const pair<vector<bool>, char>& num : morseToDecimal)
+    {
         morseToCharacter.insert(num);
-    }
-    for (const pair<vector<bool>, char>& special : morseToSpechar) {
+    } for (const pair<vector<bool>, char>& special : morseToSpechar)
+    {
         morseToCharacter.insert(special);
     }
     return morseToCharacter;
