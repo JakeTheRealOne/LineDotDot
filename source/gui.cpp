@@ -26,10 +26,14 @@
 # include <QWidget>
 # include <QMenu>
 # include <QAction>
+# include <QThread>
+# include <QPropertyAnimation>
 
 // #### Std inclusions: ####
 # include <iostream>
 # include <string>
+# include <thread>
+# include <chrono>
 using namespace std;
 
 // #### Intern inclusions: ####
@@ -44,9 +48,9 @@ GUI::GUI()
   buildLayouts();
   buildTranslateBox();
   buildMenus();
-  buildAnimations();
   buildNotification();
   buildStyle();
+  buildAnimations();
 };
 
 
@@ -56,6 +60,11 @@ void GUI::buildBars()
   encyclopediaButton.setParent(&topBar);
   radioButton.setParent(&topBar);
   settingsButton.setParent(&topBar);
+
+  this->connect(&encyclopediaButton, &QPushButton::clicked, this,
+                &GUI::toggleKnowledgeBook);
+  this->connect(&radioButton, &QPushButton::clicked, this,
+                &GUI::toggleRadio);
 
   textButton.setParent(&bottomBar);
   fileButton.setParent(&bottomBar);
@@ -168,10 +177,11 @@ void GUI::buildStyle()
     "0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
     "#settingsButton:hover, #radioButton:hover, #encyclopediaButton:hover "
     "{background-color: #2D2D2D;}"
-    "#settingsButton {margin: 0 0.5em 0 0;}"
+    "#settingsButton {margin: 0 0.5em 0 0.5em;}"
     "#encyclopediaButton {margin: 0 0.5em 0 0; font-size: 14px;}"
-    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px; "
+    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
     "padding: 0.2em 0.4em;}"
+    "#radioButton {margin: 0 0.5em 0 0;}"
 
     "#textButton, #fileButton, #materialButton, #flashButton {margin: "
     "0.1em;}"
@@ -180,8 +190,8 @@ void GUI::buildStyle()
     "#flashButton {border-top-right-radius: 0.7em;}"
 
     "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
-    "#notificationText {padding: 0.25em; background-color: #181818; margin-right: 0.25em;}"
-    "#notificationIcon {padding: 0.25em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
+    "#notificationText {padding: 0em; background-color: #181818; margin-right: 0.25em;}"
+    "#notificationIcon {padding: 0em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
 
 );
 
@@ -224,10 +234,9 @@ void GUI::buildTranslateBox()
 
 void GUI::buildAnimations()
 {
-  swapAnimation.setDuration(5000);
-  swapAnimation.setStartValue("QPushButton {color: red;}");
-  swapAnimation.setEndValue("QPushButton {color: green;}");
+  notificationAnimation.setDuration(300);
 }
+
 
 void GUI::buildNotification()
 {
@@ -240,13 +249,15 @@ void GUI::buildNotification()
   notificationText.setObjectName("notificationText");
   notificationText.setParent(&notificationBox);
   notificationBox.setObjectName("notificationBox");
-  notificationBox.show();
+  notificationBox.hide();
 }
+
 
 void GUI::buildMenus()
 {
 
 }
+
 
 void GUI::inputChanged()
 {
@@ -261,16 +272,49 @@ void GUI::inputChanged()
 }
 
 
+void GUI::notificationPopup()
+{
+  int goal = notificationBox.width() + 1;
+  notificationBox.setMaximumWidth(0);
+  notificationBox.show();
+  for (int i = 0; i < goal; ++ i)
+  {
+    notificationBox.setMaximumWidth(i);
+    QThread::msleep(1);
+  }
+  notificationBox.setMaximumWidth(QWIDGETSIZE_MAX); // reset the Max Width to let longer notifications untrucated
+}
+
+
 void GUI::notify(const QString& content, const char type, const int duration)
 {
+  if (notifAnimationRunning)
+  {
+    return; // for now we simply stop new notifications for coming
+    animationThread->exit(0);
+    notifAnimationRunning = false;
+  }
+  animationThread = QThread::create([this, content, type, duration]() {
+        this->notifyHelper(content, type, duration);
+    });
+  animationThread->start();
+  this->connect(animationThread, &QThread::finished, animationThread, &QObject::deleteLater);
+}
+
+
+void GUI::notifyHelper(const QString& content, const char type, const int duration)
+{
   // init the notification box
+  notifAnimationRunning = true;
   if (content.size() > 64)
   {
     cout << "[ERR] cannot display notification with 64 or more characters" << endl;
+    notifAnimationRunning = false;
     return;
   } else if (not content.size())
   {
     cout << "[ERR] cannot display empty notification" << endl;
+    notifAnimationRunning = false;
     return;
   }
   switch (type)
@@ -301,13 +345,17 @@ void GUI::notify(const QString& content, const char type, const int duration)
       break;
     default:
       cout << "[ERR] unknown type for notification (should be 0 -> 5)" << endl;
+      notifAnimationRunning = false;
       return;
   }
+  cout << "[NTF] " << content.toStdString() << endl;
   notificationText.setText(content);
-  notificationBox.show();
-
-  // run the animation 
+  notificationPopup();  
+  QThread::sleep(duration);
+  notificationBox.hide();
+  notifAnimationRunning = false;
 }
+
 
 void GUI::switchToTextMode()
 {
@@ -321,8 +369,6 @@ void GUI::switchToTextMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-
-  notify(QString("hello"), 5, 10);
 
   translateTextBox.show();
 }
@@ -341,8 +387,6 @@ void GUI::switchToFileMode()
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 
-  notify(QString("hello"), 4, 10);
-
   translateTextBox.hide();
 }
 
@@ -359,8 +403,6 @@ void GUI::switchToMaterialMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-
-  notify(QString("hello"), 1, 10);
 
   translateTextBox.hide();
 }
@@ -379,16 +421,12 @@ void GUI::switchToFlashMode()
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 
-  notify(QString("hello"), 2, 10);
-
-
   translateTextBox.hide();
 }
 
 
 void GUI::swapTextBoxes()
 {
-  swapAnimation.start();
   inputIsMorse = not inputIsMorse;
   const QString previousInput = inputTextBox.toPlainText();
 
@@ -401,4 +439,16 @@ void GUI::swapTextBoxes()
     inputTextBox.setPlainText(outputTextBox.toPlainText().toLower());
     outputTextBox.setPlainText(previousInput);
   }
+}
+
+
+void GUI::toggleKnowledgeBook()
+{
+  notify("not yet implemented", 1, 3);
+}
+
+
+void GUI::toggleRadio()
+{
+  notify("not yet implemented", 1, 3);
 }

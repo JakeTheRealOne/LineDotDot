@@ -31,6 +31,7 @@
 # include <QPropertyAnimation>
 # include <QMenu>
 # include <QAction>
+# include <QThread>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -92,10 +93,11 @@ private:
     QLabel("File mode is recommended for processing large amounts of data."),
     notificationIcon,
     notificationText;
-  QPropertyAnimation swapAnimation = QPropertyAnimation(&swapButton, "styleSheet");
+  QPropertyAnimation notificationAnimation = QPropertyAnimation(&notificationBox, "size");
   QMenu textBoxMenu;
+  QThread* animationThread;
 
-  bool inputIsMorse = false;
+  bool inputIsMorse = false, notifAnimationRunning = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
 
@@ -150,6 +152,21 @@ private:
    */
   void buildNotification();
 
+  /**
+   * @brief Run (handmade) the animation for notifications
+   * 
+   */
+  void notificationPopup ();
+
+  /**
+   * @brief Helper for the public method notify
+   * 
+   * @param content The content (max 64 characters)
+   * @param type The level (0 = neutral, 1 = error, 2 = warning, 3 = success, 4 = information, 5 = question)
+   * @param duration The duration (might be cut if another notification appear right after it)
+   */
+  void notifyHelper(const QString& content, const char type, const int duration);
+
   // #### Button actions: ####
 
   /**
@@ -187,6 +204,18 @@ private:
    * 
    */
   void swapTextBoxes();
+
+  /**
+   * @brief Open/Close the knowledge book
+   * 
+   */
+  void toggleKnowledgeBook();
+
+  /**
+   * @brief Open/Close the radio
+   * 
+   */
+   void toggleRadio();
 };
 
 

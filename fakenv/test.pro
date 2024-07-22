@@ -1,5 +1,5 @@
 TEMPLATE = app
 TARGET = test
 INCLUDEPATH += .
-QT += widgets
+QT += widgets core gui
 SOURCES += test.cpp
