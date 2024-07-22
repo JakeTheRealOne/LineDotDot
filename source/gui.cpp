@@ -39,13 +39,14 @@ using namespace std;
 
 GUI::GUI()
 {
-  buildStyle();
   buildButtons();
   buildBars();
   buildLayouts();
   buildTranslateBox();
   buildMenus();
   buildAnimations();
+  buildNotification();
+  buildStyle();
 };
 
 
@@ -57,7 +58,10 @@ void GUI::buildBars()
   settingsButton.setParent(&topBar);
 
   textButton.setParent(&bottomBar);
+  fileButton.setParent(&bottomBar);
+  materialButton.setParent(&bottomBar);
   flashButton.setParent(&bottomBar);
+
 }
 
 
@@ -65,6 +69,8 @@ void GUI::buildLayouts()
 {
   topLayout.addWidget(&encyclopediaButton);
   topLayout.addWidget(&radioButton);
+  topLayout.addStretch();
+  topLayout.addWidget(&notificationBox);
   topLayout.addStretch();
   topLayout.addWidget(&settingsButton);
   topLayout.addWidget(&closeButton);
@@ -89,6 +95,18 @@ void GUI::buildLayouts()
   bottomLayout.setContentsMargins(8, 8, 8, 8);
   bottomLayout.setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   bottomBar.setLayout(&bottomLayout);
+
+  notificationIcon.setParent(&notificationBox);
+  notificationText.setParent(&notificationBox);
+  notificationLayout.addWidget(&notificationIcon);
+  notificationLayout.addWidget(&notificationText);
+  notificationLayout.setSpacing(0);
+  notificationLayout.setContentsMargins(0, 0, 0, 0);
+  notificationLayout.setAlignment(Qt::AlignHCenter | Qt::AlignCenter);
+  notificationBox.setLayout(&notificationLayout);
+
+  // tmpLayout.addWidget(&notificationBox);
+  // tmpLayout.addStretch();
 
   mainLayout.addWidget(&topBar);
   mainLayout.addWidget(&translateTextBox);
@@ -160,6 +178,11 @@ void GUI::buildStyle()
     "#textButton {border-top-left-radius: 0.7em;}"
     "#fileButton, #materialButton {font-size: 19px; padding: 0.56em}"
     "#flashButton {border-top-right-radius: 0.7em;}"
+
+    "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
+    "#notificationText {padding: 0.25em; background-color: #181818; margin-right: 0.25em;}"
+    "#notificationIcon {padding: 0.25em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
+
 );
 
   int bottomButtonSize = 55;
@@ -206,32 +229,24 @@ void GUI::buildAnimations()
   swapAnimation.setEndValue("QPushButton {color: green;}");
 }
 
+void GUI::buildNotification()
+{
+  notificationBox.setParent(&topBar);
+  notificationIcon.setText("");
+  notificationIcon.setStyleSheet("#notificationIcon {color: #FFFFFF;}");
+  notificationIcon.setObjectName("notificationIcon");
+  notificationIcon.setParent(&notificationBox);
+  notificationText.setText("this is a notification");
+  notificationText.setObjectName("notificationText");
+  notificationText.setParent(&notificationBox);
+  notificationBox.setObjectName("notificationBox");
+  notificationBox.show();
+}
 
 void GUI::buildMenus()
 {
-  // build the menu for QTextEdit here
-  /*
-  # Copy
-  # Paste
-  # Cut
 
-  # Undo
-  # Redo
-
-  # Select all
-  # Delete
-
-
-  
-  */
 }
-
-
-void GUI::animateSwapButton()
-{
-  swapAnimation.start();
-}
-
 
 void GUI::inputChanged()
 {
@@ -246,6 +261,54 @@ void GUI::inputChanged()
 }
 
 
+void GUI::notify(const QString& content, const char type, const int duration)
+{
+  // init the notification box
+  if (content.size() > 64)
+  {
+    cout << "[ERR] cannot display notification with 64 or more characters" << endl;
+    return;
+  } else if (not content.size())
+  {
+    cout << "[ERR] cannot display empty notification" << endl;
+    return;
+  }
+  switch (type)
+  {
+    case 0: // neutral
+      notificationIcon.setText("");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #FFFFFF;}");
+      break;
+    case 1: // error
+      notificationIcon.setText("");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #FD1D58;}");
+      break;
+    case 2: // warning
+      notificationIcon.setText("");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #FCD71C;}");
+      break;
+    case 3: // success
+      notificationIcon.setText("");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #3FE28B;}");
+      break;
+    case 4: // info
+      notificationIcon.setText("");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #9258EA;}");
+      break;
+    case 5: // question
+      notificationIcon.setText("󰠗");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #9258EA;}");
+      break;
+    default:
+      cout << "[ERR] unknown type for notification (should be 0 -> 5)" << endl;
+      return;
+  }
+  notificationText.setText(content);
+  notificationBox.show();
+
+  // run the animation 
+}
+
 void GUI::switchToTextMode()
 {
   if (currentMode == 0)
@@ -258,6 +321,8 @@ void GUI::switchToTextMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  notify(QString("hello"), 5, 10);
 
   translateTextBox.show();
 }
@@ -276,6 +341,8 @@ void GUI::switchToFileMode()
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 
+  notify(QString("hello"), 4, 10);
+
   translateTextBox.hide();
 }
 
@@ -293,6 +360,8 @@ void GUI::switchToMaterialMode()
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
 
+  notify(QString("hello"), 1, 10);
+
   translateTextBox.hide();
 }
 
@@ -309,6 +378,9 @@ void GUI::switchToFlashMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  notify(QString("hello"), 2, 10);
+
 
   translateTextBox.hide();
 }

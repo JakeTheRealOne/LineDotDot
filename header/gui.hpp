@@ -61,12 +61,23 @@ public:
    */
   ~GUI() = default;
 
+  // #### Open methods: ####
+
+  /**
+   * @brief Send a notification to the user (appear on the top bar)
+   * 
+   * @param content The content (max 64 characters)
+   * @param type The level (0 = neutral, 1 = error, 2 = warning, 3 = success, 4 = information, 5 = question)
+   * @param duration The duration (might be cut if another notification appear right after it)
+   */
+  void notify(const QString& content, const char type, const int duration);
+
 private:
   // #### Attributes: ####
 
-  QWidget bottomBar, topBar, translateTextBox, switchBox;
-  QVBoxLayout mainLayout, translateTextLayout;
-  QHBoxLayout bottomLayout, topLayout, sbLayout;
+  QWidget bottomBar, topBar, translateTextBox, switchBox, notificationBox;
+  QVBoxLayout mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
+  QHBoxLayout bottomLayout, topLayout, sbLayout, notificationLayout;
   QPushButton closeButton = QPushButton(""),
               encyclopediaButton = QPushButton(""),
               radioButton = QPushButton("󰜟"),
@@ -78,7 +89,9 @@ private:
               swapButton = QPushButton("󰯎");
   QTextEdit inputTextBox, outputTextBox;
   QLabel warningLabel =
-    QLabel("File mode is recommended for processing large amounts of data.");
+    QLabel("File mode is recommended for processing large amounts of data."),
+    notificationIcon,
+    notificationText;
   QPropertyAnimation swapAnimation = QPropertyAnimation(&swapButton, "styleSheet");
   QMenu textBoxMenu;
 
@@ -132,10 +145,10 @@ private:
   void buildMenus();
 
   /**
-   * @brief Run the swapButton animation (360° rotation)
+   * @brief Build the notification of the GUI
    * 
    */
-  void animateSwapButton();
+  void buildNotification();
 
   // #### Button actions: ####
 
