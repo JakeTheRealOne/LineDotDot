@@ -21,29 +21,29 @@ using namespace std;
 
 
 ConversionSettings::ConversionSettings
-(const char shortSignal, const char longSignal)
+(const wchar_t shortSignal, const wchar_t longSignal)
 noexcept : _shortSignal(shortSignal), _longSignal(longSignal) {}
 
 
-ConversionSettings::ConversionSettings(const char shortSignal,
-const char longSignal, const string& letterSep, const string& wordSep) :
+ConversionSettings::ConversionSettings(const wchar_t shortSignal,
+const wchar_t longSignal, const wstring& letterSep, const wstring& wordSep) :
 _shortSignal(shortSignal), _longSignal(longSignal), _letterSep(letterSep),
 _wordSep(wordSep) {}
 
 
-char ConversionSettings::shortSignal() const noexcept {return this->_shortSignal;}
+wchar_t ConversionSettings::shortSignal() const noexcept {return this->_shortSignal;}
 
 
-char ConversionSettings::longSignal() const noexcept {return this->_longSignal;}
+wchar_t ConversionSettings::longSignal() const noexcept {return this->_longSignal;}
 
 
-string ConversionSettings::letterSep() const noexcept {return this->_letterSep;}
+wstring ConversionSettings::letterSep() const noexcept {return this->_letterSep;}
 
 
-string ConversionSettings::wordSep() const noexcept {return this->_wordSep;}
+wstring ConversionSettings::wordSep() const noexcept {return this->_wordSep;}
 
 
-void ConversionSettings::setShortSignal(const char newShortSignal)
+void ConversionSettings::setShortSignal(const wchar_t newShortSignal)
 {
     if (
         find(_letterSep.begin(), _letterSep.end(), newShortSignal) != _letterSep.end()
@@ -62,7 +62,7 @@ void ConversionSettings::setShortSignal(const char newShortSignal)
 }
 
 
-void ConversionSettings::setLongSignal(const char newLongSignal)
+void ConversionSettings::setLongSignal(const wchar_t newLongSignal)
 {
     if (
         find(_letterSep.begin(), _letterSep.end(), newLongSignal) != _letterSep.end()
@@ -81,7 +81,7 @@ void ConversionSettings::setLongSignal(const char newLongSignal)
 }
 
 
-void ConversionSettings::setLetterSep(const string& newLetterSep)
+void ConversionSettings::setLetterSep(const wstring& newLetterSep)
 {
     if (newLetterSep.empty() or newLetterSep.size() > 16)
     {
@@ -102,7 +102,7 @@ void ConversionSettings::setLetterSep(const string& newLetterSep)
 }
 
 
-void ConversionSettings::setWordSep(const string& newWordSep)
+void ConversionSettings::setWordSep(const wstring& newWordSep)
 {
     if (newWordSep.empty() or newWordSep.size() > 32)
     {
@@ -127,8 +127,8 @@ void ConversionSettings::reset() noexcept
 {
     _shortSignal = '.';
     _longSignal = '-';
-    _letterSep = " ";
-    _wordSep = " ";
+    _letterSep = L" ";
+    _wordSep = L" ";
 }
 
 
@@ -145,8 +145,8 @@ bool ConversionSettings::operator==(const ConversionSettings& other) const noexc
 }
 
 
-ostream& operator<<(ostream& stream, const ConversionSettings& me) noexcept
+wostream& operator<<(wostream& stream, const ConversionSettings& me) noexcept
 {
-    stream << "ConversionSettings({" << me._shortSignal << "}, {" << me._longSignal << "}, [" << me._letterSep << "], [" << me._wordSep << "]";
+    stream << L"ConversionSettings({" << me._shortSignal << L"}, {" << me._longSignal << L"}, [" << me._letterSep << L"], [" << me._wordSep << L"]";
     return stream;
 }

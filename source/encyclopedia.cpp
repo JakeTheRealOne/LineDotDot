@@ -17,6 +17,9 @@
 using namespace std;
 
 
+const vector<bool> SOS = {0, 0, 0, 1, 1, 1, 0, 0, 0};
+
+
 const unordered_map<char, vector<string>> ALPHABET = 
 {
     {'a', {".-", "Alfa"}},      {'b', {"-...", "Bravo"}},
@@ -37,7 +40,27 @@ const unordered_map<char, vector<string>> ALPHABET =
 };
 
 
-unordered_map<char, vector<bool>> buildCTM()
+const unordered_map<string, string> MAGIC =
+{
+  {"International distress call", "...---..."},
+  {"Invitation to forward", "-.-"},
+  {"Start of message", ".-.-"},
+  {"Error by the message sender", "........"},
+  {"Adjust your signal lights (Light transmission)", ".-...-."},
+  {"Asking for a stronger light (Light transmission)", ".-...-.."},
+  {"Asking for a less strong light (Light transmission)", ""},
+  {"Asking to slow down", ".--..--."},
+  {"Stop (new paragraph)", "....-.."},
+  {"End of message (waiting for response)", ".-.-."},
+  {"Not understood, please repeat", "..--.."},
+  {"Understood", "...-."},
+  {"Please wait", ".-..."},
+  {"End of contact (leaving the post)", "...-.-"},
+
+};
+
+
+unordered_map<wchar_t, vector<bool>> buildCTM()
 {
     const unordered_map<char, vector<bool>> alphaToMorse =
     {
@@ -83,10 +106,26 @@ unordered_map<char, vector<bool>> buildCTM()
       {'"', {0, 1, 0, 0, 1, 0}}, {'$', {0, 0, 0, 1, 0, 0, 1}},
     };
 
-    const unordered_map<char, vector<bool>> acccharToMorse;
+    const unordered_map<wchar_t, vector<bool>> acccharToMorse =
+    {
+      {L'ä', {0, 1, 0, 1}},
+      {L'à', {0, 1, 1, 0, 1}},
+      {L'ç', {1, 0, 1, 0, 0}},
+      {L'ð', {0, 0, 1, 1, 0}},
+      {L'è', {0, 1, 0, 0, 1}},
+      {L'é', {0, 0, 1, 0, 0}},
+      {L'ĝ', {1, 1, 0, 1, 0}},
+      {L'ĥ', {1, 0, 1, 1, 0}},
+      {L'ĵ', {0, 1, 1, 1, 0}},
+      {L'ñ', {1, 1, 0, 1, 1}},
+      {L'ö', {1, 1, 1, 0}},
+      {L'ŝ', {0, 0, 0, 1, 0}},
+      {L'þ', {0, 1, 1, 0, 0}},
+      {L'ü', {0, 0, 1, 1}},
+    };
 
 
-    unordered_map<char, vector<bool>> characterToMorse;
+    unordered_map<wchar_t, vector<bool>> characterToMorse;
     for (const pair<char, vector<bool>>& letter : alphaToMorse)
     {
         characterToMorse.insert(letter);
@@ -96,7 +135,7 @@ unordered_map<char, vector<bool>> buildCTM()
     } for (const pair<char, vector<bool>>& special : specharToMorse)
     {
         characterToMorse.insert(special);
-    } for (const pair<char, vector<bool>>& accent : acccharToMorse)
+    } for (const pair<wchar_t, vector<bool>>& accent : acccharToMorse)
     {
       characterToMorse.insert(accent);
     }
@@ -105,7 +144,7 @@ unordered_map<char, vector<bool>> buildCTM()
 }
 
 
-unordered_map<vector<bool>, char> buildMTC()
+unordered_map<vector<bool>, wchar_t> buildMTC()
 {
     const unordered_map<vector<bool>, char> morseToAlpha =
     {
@@ -155,9 +194,25 @@ unordered_map<vector<bool>, char> buildMTC()
         {{0, 1, 1, 0, 1, 0}, '@'},
     };
 
-    const unordered_map<vector<bool>, char> morseToAccchar;
+    const unordered_map<vector<bool>, wchar_t> morseToAccchar =
+    {
+      {{0, 0, 1, 1, }, L'ü'},
+      {{0, 1, 0, 1, }, L'ä'},
+      {{1, 0, 1, 1, 0, }, L'ĥ'},
+      {{1, 1, 0, 1, 1, }, L'ñ'},
+      {{0, 1, 1, 0, 0, }, L'þ'},
+      {{0, 1, 1, 0, 1, }, L'à'},
+      {{1, 0, 1, 0, 0, }, L'ç'},
+      {{0, 1, 1, 1, 0, }, L'ĵ'},
+      {{0, 0, 1, 1, 0, }, L'ð'},
+      {{0, 1, 0, 0, 1, }, L'è'},
+      {{0, 0, 0, 1, 0, }, L'ŝ'},
+      {{0, 0, 1, 0, 0, }, L'é'},
+      {{1, 1, 0, 1, 0, }, L'ĝ'},
+      {{1, 1, 1, 0, }, L'ö'},
+    };
 
-    unordered_map<vector<bool>, char> morseToCharacter;
+    unordered_map<vector<bool>, wchar_t> morseToCharacter;
     for (const pair<vector<bool>, char>& letter : morseToAlpha)
     {
         morseToCharacter.insert(letter);
@@ -167,10 +222,49 @@ unordered_map<vector<bool>, char> buildMTC()
     } for (const pair<vector<bool>, char>& special : morseToSpechar)
     {
         morseToCharacter.insert(special);
-    } for (const pair<vector<bool>, char>& accent : morseToAccchar)
+    } for (const pair<vector<bool>, wchar_t>& accent : morseToAccchar)
     {
         morseToCharacter.insert(accent);
     }
 
     return morseToCharacter;
 }
+
+// const unordered_map<wchar_t, vector<bool>> acccharToMorse =
+// {
+//   {L'ä', {0, 1, 0, 1}},
+//   {L'à', {0, 1, 1, 0, 1}},
+//   {L'ç', {1, 0, 1, 0, 0}},
+//   {L'ð', {0, 0, 1, 1, 0}},
+//   {L'è', {0, 1, 0, 0, 1}},
+//   {L'é', {0, 0, 1, 0, 0}},
+//   {L'ĝ', {1, 1, 0, 1, 0}},
+//   {L'ĥ', {1, 0, 1, 1, 0}},
+//   {L'ĵ', {0, 1, 1, 1, 0}},
+//   {L'ñ', {1, 1, 0, 1, 1}},
+//   {L'ö', {1, 1, 1, 0}},
+//   {L'ŝ', {0, 0, 0, 1, 0}},
+//   {L'þ', {0, 1, 1, 0, 0}},
+//   {L'ü', {0, 0, 1, 1}},
+// };
+
+// # include <iostream>
+// # include <locale>
+// int main()
+// {
+//   std::locale::global(std::locale(""));  // Set the global locale to the user’s default
+//   std::wcout.imbue(std::locale()); 
+//   wcout << L"const unordered_map<vector<bool>, wchar_t> morseToAccchar =\n{\n";
+//   for (const auto& pair : acccharToMorse)
+//   {
+//     wcout << L"  {{";
+//     for (const bool signal : pair.second)
+//     {
+//       wcout << signal << ", ";
+//     }
+//     wcout << L"}, L'" << (wchar_t)pair.first << L"'},\n";
+//   }
+
+//   wcout << "};\n";
+//   return 0;
+// }

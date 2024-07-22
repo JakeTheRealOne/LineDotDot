@@ -29,6 +29,8 @@
 # include <QVBoxLayout>
 # include <QWidget>
 # include <QPropertyAnimation>
+# include <QMenu>
+# include <QAction>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -62,8 +64,8 @@ public:
 private:
   // #### Attributes: ####
 
-  QWidget bottomBar, topBar, translateBox, switchBox;
-  QVBoxLayout mainLayout, translateLayout;
+  QWidget bottomBar, topBar, translateTextBox, switchBox;
+  QVBoxLayout mainLayout, translateTextLayout;
   QHBoxLayout bottomLayout, topLayout, sbLayout;
   QPushButton closeButton = QPushButton(""),
               encyclopediaButton = QPushButton(""),
@@ -78,6 +80,7 @@ private:
   QLabel warningLabel =
     QLabel("File mode is recommended for processing large amounts of data.");
   QPropertyAnimation swapAnimation = QPropertyAnimation(&swapButton, "styleSheet");
+  QMenu textBoxMenu;
 
   bool inputIsMorse = false;
   char currentMode =
@@ -121,6 +124,12 @@ private:
    * 
    */
   void buildAnimations();
+
+  /**
+   * @brief Build the menus of the GUI
+   * 
+   */
+  void buildMenus();
 
   /**
    * @brief Run the swapButton animation (360° rotation)

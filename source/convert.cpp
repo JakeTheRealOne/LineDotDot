@@ -9,7 +9,9 @@
  * 
  */
 // #### Std inclusions: ####
+# include <cctype>
 # include <iostream>
+# include <locale>
 # include <string>
 # include <unordered_map>
 # include <vector>
@@ -21,25 +23,24 @@ using namespace std;
 # include "../header/settings.hpp"
 
 
-const unordered_map<char, vector<bool>> charToMorse = buildCTM();
-const unordered_map<vector<bool>, char> morseToChar = buildMTC();
+const unordered_map<wchar_t, vector<bool>> charToMorse = buildCTM();
+const unordered_map<vector<bool>, wchar_t> morseToChar = buildMTC();
+const locale userLocal("");
 
-
-string Encoder::convert(const string &text,
+wstring Encoder::convert(const wstring &text,
                         const ConversionSettings &settings)
   {
-  string morseCode;
-  char character;
-  unordered_map<char, vector<bool>>::const_iterator pos;
+  wstring morseCode;
+  wchar_t character;
   for (int i = 0; i < text.size(); ++i)
   {
-    character = text[i];
+    character = tolower(text[i], userLocal);
     if (character != ' ' and character != '\n')
     {
-      pos = charToMorse.find(tolower(character));
+      const auto& pos = charToMorse.find(tolower(character));
       if (pos == charToMorse.end())
       {
-        cout << "[WRN] ignoring {" << string(1, character)
+        wcout << "[WRN] ignoring {" << wstring(1, character)
              << "}, which cannot be converted to Morse Code" << endl;
       } else
       {
@@ -52,7 +53,7 @@ string Encoder::convert(const string &text,
         {
           if (text[i + 1] == '\n')
           {
-            morseCode += '\n';
+            morseCode += L'\n';
           } else if (text[i + 1] == ' ')
           {
             morseCode += settings.wordSep();
@@ -68,10 +69,10 @@ string Encoder::convert(const string &text,
 }
 
 
-string Decoder::convert(const string &morse,
+wstring Decoder::convert(const wstring &morse,
                         const ConversionSettings &settings)
   {
-  string convertedText;
+  wstring convertedText;
   int n = morse.size(), offset;
   vector<bool> currentLetter;
   for (int i = 0; i < n; ++i)
@@ -90,8 +91,7 @@ string Decoder::convert(const string &morse,
         i += (morse[i] == '\n' ? offset : offset - 1);
         const auto &pos = morseToChar.find(currentLetter);
         if (pos != morseToChar.end())
-        {
-          convertedText.push_back(pos->second);
+        {          convertedText.push_back(pos->second);
         } else
         {
           cout << "[WRN] ignoring [";
@@ -150,7 +150,7 @@ string Decoder::convert(const string &morse,
 }
 
 
-int Decoder::endOfWord(const string &morse, int index,
+int Decoder::endOfWord(const wstring &morse, int index,
                        const ConversionSettings &settings)
   {
   int n = morse.size(), offset = 0;
@@ -169,7 +169,7 @@ int Decoder::endOfWord(const string &morse, int index,
 }
 
 
-int Decoder::endOfLetter(const string &morse, int index,
+int Decoder::endOfLetter(const wstring &morse, int index,
                          const ConversionSettings &settings)
 {
   int n = morse.size(), offset = 0;

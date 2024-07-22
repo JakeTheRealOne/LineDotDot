@@ -26,7 +26,7 @@ namespace Encoder {
  * @param settings The settings of conversion
  * @return string The morse text
  */
-string convert (const string& text, const ConversionSettings& settings = ConversionSettings());
+wstring convert (const wstring& text, const ConversionSettings& settings = ConversionSettings());
 }
 
 
@@ -39,7 +39,7 @@ namespace Decoder {
  * @param settings The settings of conversion
  * @return string The alpha text
  */
-string convert (const string& morse, const ConversionSettings& settings = ConversionSettings());
+wstring convert (const wstring& morse, const ConversionSettings& settings = ConversionSettings());
 
 /**
  * @brief Check if morse[index:?] is the end of a letter
@@ -49,7 +49,7 @@ string convert (const string& morse, const ConversionSettings& settings = Conver
  * @param settings The conversion settings
  * @return int The offset of the end of letter (0 if no end)
  */
-int endOfLetter(const string& morse, int index, const ConversionSettings& settings);
+int endOfLetter(const wstring& morse, int index, const ConversionSettings& settings);
 
 /**
  * @brief Check if morse[index:?] is the end of a word
@@ -59,7 +59,7 @@ int endOfLetter(const string& morse, int index, const ConversionSettings& settin
  * @param settings The conversion settings
  * @return int The offset of the end of word (0 if no end)
  */
-int endOfWord(const string& morse, int index, const ConversionSettings& settings);
+int endOfWord(const wstring& morse, int index, const ConversionSettings& settings);
 }
 
 

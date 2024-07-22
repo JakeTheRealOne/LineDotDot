@@ -24,10 +24,8 @@
 # include <QTextEdit>
 # include <QVBoxLayout>
 # include <QWidget>
-# include <QPropertyAnimation>
-# include <QTransform>
-# include <QRect>
-# include <QGraphicsRotation>
+# include <QMenu>
+# include <QAction>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -46,6 +44,7 @@ GUI::GUI()
   buildBars();
   buildLayouts();
   buildTranslateBox();
+  buildMenus();
   buildAnimations();
 };
 
@@ -74,13 +73,13 @@ void GUI::buildLayouts()
   topLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
   topBar.setLayout(&topLayout);
 
-  translateLayout.addWidget(&inputTextBox);
-  translateLayout.addWidget(&warningLabel);
-  translateLayout.addWidget(&switchBox);
-  translateLayout.addWidget(&outputTextBox);
-  translateLayout.setContentsMargins(8, 8, 8, 8);
-  translateLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-  translateBox.setLayout(&translateLayout);
+  translateTextLayout.addWidget(&inputTextBox);
+  translateTextLayout.addWidget(&warningLabel);
+  translateTextLayout.addWidget(&switchBox);
+  translateTextLayout.addWidget(&outputTextBox);
+  translateTextLayout.setContentsMargins(8, 8, 8, 8);
+  translateTextLayout.setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+  translateTextBox.setLayout(&translateTextLayout);
 
   bottomLayout.addWidget(&textButton);
   bottomLayout.addWidget(&fileButton);
@@ -92,7 +91,7 @@ void GUI::buildLayouts()
   bottomBar.setLayout(&bottomLayout);
 
   mainLayout.addWidget(&topBar);
-  mainLayout.addWidget(&translateBox);
+  mainLayout.addWidget(&translateTextBox);
   mainLayout.addWidget(&bottomBar);
   mainLayout.setSpacing(0);
   mainLayout.setContentsMargins(0, 0, 0, 0);
@@ -142,9 +141,10 @@ void GUI::buildStyle()
     "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
     "0.8em; border: none;}"
     "QPushButton:hover {background-color: #454545;}"
+    // "QMenu::item {border-radius: 3px; margin: 0.2em; padding: 0.2em; font-size: 16px;}"// background-color: 060606; color: #FFFFFF;}"
 
     "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
-
+    
     "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
     "#settingsButton, #radioButton, #encyclopediaButton {border-radius: "
     "0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
@@ -180,7 +180,9 @@ void GUI::buildStyle()
 
 void GUI::buildTranslateBox()
 {
+  outputTextBox.setPlaceholderText("Read");
   outputTextBox.setReadOnly(true);
+  inputTextBox.setPlaceholderText("Write");
   swapButton.setObjectName("swapButton");
   warningLabel.setAlignment(Qt::AlignHCenter);
   warningLabel.setObjectName("warningLabel");
@@ -205,6 +207,26 @@ void GUI::buildAnimations()
 }
 
 
+void GUI::buildMenus()
+{
+  // build the menu for QTextEdit here
+  /*
+  # Copy
+  # Paste
+  # Cut
+
+  # Undo
+  # Redo
+
+  # Select all
+  # Delete
+
+
+  
+  */
+}
+
+
 void GUI::animateSwapButton()
 {
   swapAnimation.start();
@@ -213,8 +235,8 @@ void GUI::animateSwapButton()
 
 void GUI::inputChanged()
 {
-  const string& inputText = this->inputTextBox.toPlainText().toStdString();
-  const QString newQstring = QString::fromStdString(
+  const wstring& inputText = this->inputTextBox.toPlainText().toStdWString();
+  const QString newQstring = QString::fromStdWString(
       inputIsMorse ? Decoder::convert(inputText) : Encoder::convert(inputText)
   );
   int scrollPosition = outputTextBox.verticalScrollBar()->value();
@@ -236,6 +258,8 @@ void GUI::switchToTextMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  translateTextBox.show();
 }
 
 
@@ -251,6 +275,8 @@ void GUI::switchToFileMode()
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  translateTextBox.hide();
 }
 
 
@@ -266,6 +292,8 @@ void GUI::switchToMaterialMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  translateTextBox.hide();
 }
 
 
@@ -281,6 +309,8 @@ void GUI::switchToFlashMode()
   fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
   textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+
+  translateTextBox.hide();
 }
 
 

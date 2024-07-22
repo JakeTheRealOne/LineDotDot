@@ -34,7 +34,7 @@ public:
      * @param shortSignal The character representing the short signal
      * @param longSignal The character representing the long signal
      */
-    ConversionSettings (const char shortSignal, const char longSignal) noexcept;
+    ConversionSettings (const wchar_t shortSignal, const wchar_t longSignal) noexcept;
 
     /**
      * @brief Construct a new ConversionSettings object (full constructor)
@@ -44,7 +44,7 @@ public:
      * @param letterSep The string that will separe each letter
      * @param wordSep The string that will separe each word
      */
-    ConversionSettings (const char shortSignal, const char longSignal, const string& letterSep, const string& wordSep);
+    ConversionSettings (const wchar_t shortSignal, const wchar_t longSignal, const wstring& letterSep, const wstring& wordSep);
 
     /**
      * @brief Destroy the ConversionSettings object
@@ -58,25 +58,25 @@ public:
      * @brief Get the Short signal
      * 
      */
-    char shortSignal () const noexcept;
+    wchar_t shortSignal () const noexcept;
 
     /**
      * @brief Get the Long signal
      * 
      */
-    char longSignal () const noexcept;
+    wchar_t longSignal () const noexcept;
 
     /**
      * @brief Get the Letter separator
      * 
      */
-    string letterSep () const noexcept;
+    wstring letterSep () const noexcept;
 
     /**
      * @brief Get the Word separator
      * 
      */
-    string wordSep () const noexcept;
+    wstring wordSep () const noexcept;
 
     // #### setters: ####
 
@@ -85,28 +85,28 @@ public:
      * 
      * @param newShortSignal The new short signal
      */
-    void setShortSignal (const char newShortSignal);
+    void setShortSignal (const wchar_t newShortSignal);
 
     /**
      * @brief Set the Long Signal object
      * 
      * @param newLongSignal The new long signal
      */
-    void setLongSignal (const char newLongSignal);
+    void setLongSignal (const wchar_t newLongSignal);
 
     /**
      * @brief Set the Letter Sep object
      * 
      * @param newLetterSep The new letter separator
      */
-    void setLetterSep (const string& newLetterSep);
+    void setLetterSep (const wstring& newLetterSep);
 
     /**
      * @brief Set the Word Sep object
      * 
      * @param newWordSep The new word separator
      */
-    void setWordSep (const string& newWordSep);
+    void setWordSep (const wstring& newWordSep);
 
     // #### methods: ####
 
@@ -134,11 +134,11 @@ public:
      * @param me The current ConversionSettings instance
      * @return ostream& The modified stream with the instance infos
      */
-    friend ostream& operator<< (ostream& stream, const ConversionSettings& me) noexcept;
+    friend wostream& operator<< (wostream& stream, const ConversionSettings& me) noexcept;
 
 private:
-    char _shortSignal = '.', _longSignal = '-';
-    string _letterSep = " ", _wordSep = "  ";
+    wchar_t _shortSignal = '.', _longSignal = '-';
+    wstring _letterSep = L" ", _wordSep = L"  ";
 };
 
 
