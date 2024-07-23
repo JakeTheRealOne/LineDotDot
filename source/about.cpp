@@ -43,6 +43,7 @@ void About::buildChildren()
 
 void About::buildStyle()
 {
+  this->setWindowFlags(Qt::FramelessWindowHint);
   this->setAttribute(Qt::WA_TranslucentBackground);
   this->setStyleSheet(
     "QWidget {background-color: #242424; color: #FFFFFF; padding: 0.25em; margin: 0.25em; font-size: 18px; border-radius: 3px;}"
@@ -82,7 +83,7 @@ void About::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    if (!isMaximized()) {
+    if (!isMaximized() and !isFullScreen()) {
         QPainterPath path;
         path.addRoundedRect(rect(), 15, 15);
         painter.fillPath(path, QColor(36, 36, 36));

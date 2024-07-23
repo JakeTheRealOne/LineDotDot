@@ -81,8 +81,8 @@ public:
 private:
   // #### Attributes: ####
 
-  QWidget bottomBar, topBar, translateTextBox, switchBox, notificationBox;
-  QVBoxLayout mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
+  QWidget mainWindow, bottomBar, topBar, translateTextBox, switchBox, notificationBox;
+  QVBoxLayout tmpLayout, mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
   QHBoxLayout bottomLayout, topLayout, sbLayout, notificationLayout;
   QPushButton closeButton = QPushButton(""),
               encyclopediaButton = QPushButton(""),

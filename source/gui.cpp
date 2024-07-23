@@ -45,6 +45,13 @@ using namespace std;
 
 GUI::GUI()
 {
+  this->setWindowFlags(Qt::FramelessWindowHint);
+  mainWindow.setParent(this);
+  tmpLayout.setSpacing(0);
+  tmpLayout.setContentsMargins(0, 0, 0, 0);
+  tmpLayout.addWidget(&mainWindow);
+  this->setLayout(&tmpLayout);
+
   buildButtons();
   buildBars();
   buildLayouts();
@@ -119,55 +126,55 @@ void GUI::buildLayouts()
   mainLayout.addWidget(&bottomBar);
   mainLayout.setSpacing(0);
   mainLayout.setContentsMargins(0, 0, 0, 0);
-  this->setLayout(&mainLayout);
+  mainWindow.setLayout(&mainLayout);
 }
 
 
 void GUI::buildButtons()
 {
   closeButton.setObjectName("closeButton");
-  this->connect(&closeButton, &QPushButton::clicked, this,
+  mainWindow.connect(&closeButton, &QPushButton::clicked, this,
                 &QApplication::quit);
 
   encyclopediaButton.setObjectName("encyclopediaButton");
   encyclopediaButton.setToolTip("open the knowledge book");
-  this->connect(&encyclopediaButton, &QPushButton::clicked, this,
+  mainWindow.connect(&encyclopediaButton, &QPushButton::clicked, this,
                 &GUI::toggleKnowledgeBook);
 
   radioButton.setObjectName("radioButton");
   radioButton.setToolTip("open the broadcast center");
-  this->connect(&radioButton, &QPushButton::clicked, this,
+  mainWindow.connect(&radioButton, &QPushButton::clicked, this,
                 &GUI::toggleRadio);
 
   settingsButton.setObjectName("settingsButton");
-  // this->connect(&settingsButton, &QPushButton::clicked, this, &GUI::toggleSettings);
   settingsButton.setMenu(&settingsMenu);
 
   textButton.setObjectName("textButton");
-  this->connect(&textButton, &QPushButton::clicked, this,
+  mainWindow.connect(&textButton, &QPushButton::clicked, this,
                 &GUI::switchToTextMode);
 
   fileButton.setObjectName("fileButton");
-  this->connect(&fileButton, &QPushButton::clicked, this,
+  mainWindow.connect(&fileButton, &QPushButton::clicked, this,
                 &GUI::switchToFileMode);
 
   materialButton.setObjectName("materialButton");
-  this->connect(&materialButton, &QPushButton::clicked, this,
+  mainWindow.connect(&materialButton, &QPushButton::clicked, this,
                 &GUI::switchToMaterialMode);
 
   flashButton.setObjectName("flashButton");
-  this->connect(&flashButton, &QPushButton::clicked, this,
+  mainWindow.connect(&flashButton, &QPushButton::clicked, this,
                 &GUI::switchToFlashMode);
 }
 
 
 void GUI::buildStyle()
 {
-  this->setMinimumSize(400, 400);
-  this->setWindowTitle("LineDotDot");
+  mainWindow.setMinimumSize(400, 400);
+  mainWindow.setWindowTitle("LineDotDot");
   this->setAttribute(Qt::WA_TranslucentBackground);
 
-  this->setStyleSheet(
+
+  mainWindow.setStyleSheet(
     "QWidget {color: #FFFFFF;}"
     "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
     "solid #FFFFFF; border-radius: 0.3em; padding: 0.1em;}"
@@ -274,7 +281,7 @@ void GUI::buildMenus()
   settingsMenu.addAction(new QAction("Langage"));
   settingsMenu.addAction(new QAction("Dark theme"));
   settingsMenu.addAction(aboutAction);
-  this->connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
+  mainWindow.connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
 }
 
 
@@ -316,7 +323,7 @@ void GUI::notify(const QString& content, const char type, const int duration)
     });
   notificationThread->start();
   notificationThread->setPriority(QThread::LowestPriority);
-  this->connect(notificationThread, &QThread::finished, notificationThread, &QObject::deleteLater);
+  mainWindow.connect(notificationThread, &QThread::finished, notificationThread, &QObject::deleteLater);
 }
 
 
@@ -489,7 +496,7 @@ void GUI::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    if (!isMaximized()) {
+    if (!isMaximized() and !isFullScreen()) {
         QPainterPath path;
         path.addRoundedRect(rect(), 15, 15);
         painter.fillPath(path, QColor(36, 36, 36));
