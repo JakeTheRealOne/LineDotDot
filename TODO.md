@@ -1,5 +1,6 @@
+- Fixing convertMorse and its ugly code
+- Adding settings menu with options [Language | Dark theme | About LineDotDot]
 - Adding a dynamic programmation to the converter
-- Changing the type from int to long for all variables that are used to iterate over the texts
 - Adding modes
     - file mode [implementation difficulty: easy]
     - material mode [implementation difficulty: medium]

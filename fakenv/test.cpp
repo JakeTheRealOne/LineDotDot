@@ -1,22 +1,31 @@
 #include <QApplication>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QWidget>
-#include <QPropertyAnimation>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     QWidget window;
-    QWidget widget(&window);
-    widget.setFixedSize(0, 100); // Initial size
-    window.show();
+    QVBoxLayout *layout = new QVBoxLayout(&window);
 
-    QPropertyAnimation animation(&widget, "size");
-    animation.setDuration(1000); // Duration in milliseconds
-    animation.setStartValue(QSize(0, 100));
-    animation.setEndValue(QSize(300, 100));
-    animation.setEasingCurve(QEasingCurve::InOutQuad); // Smooth transition
-    animation.start();
+    QPushButton *button1 = new QPushButton("Button 1");
+    QPushButton *button2 = new QPushButton("Button 2");
+
+    // Make buttons checkable
+    button1->setCheckable(true);
+    button2->setCheckable(true);
+
+    // Apply style sheet
+    QString styleSheet = "QPushButton:checked { background-color: red; }";
+    button1->setStyleSheet(styleSheet);
+    button2->setStyleSheet(styleSheet);
+
+    layout->addWidget(button1);
+    layout->addWidget(button2);
+
+    window.setLayout(layout);
+    window.show();
 
     return app.exec();
 }

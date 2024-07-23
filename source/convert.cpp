@@ -32,7 +32,8 @@ wstring Encoder::convert(const wstring &text,
   {
   wstring morseCode;
   wchar_t character;
-  for (int i = 0; i < text.size(); ++i)
+  unsigned long n = text.size();
+  for (unsigned long i = 0; i < n; ++i)
   {
     character = tolower(text[i], userLocal);
     if (character != ' ' and character != '\n')
@@ -73,22 +74,24 @@ wstring Decoder::convert(const wstring &morse,
                         const ConversionSettings &settings)
   {
   wstring convertedText;
-  int n = morse.size(), offset;
+  unsigned long n = morse.size(), offset;
+  wchar_t character; 
   vector<bool> currentLetter;
-  for (int i = 0; i < n; ++i)
+  for (unsigned long i = 0; i < n; ++i)
   {
-    if (morse[i] == settings.shortSignal())
+    character = morse[i];
+    if (character == settings.shortSignal())
     {
       currentLetter.push_back(0);
-    } else if (morse[i] == settings.longSignal())
+    } else if (character == settings.longSignal())
     {
       currentLetter.push_back(1);
     } else
     {
       offset = endOfWord(morse, i, settings);
-      if (offset or morse[i] == '\n')
+      if (offset or character == '\n')
       {
-        i += (morse[i] == '\n' ? offset : offset - 1);
+        i += (character == '\n' ? offset : offset - 1);
         const auto &pos = morseToChar.find(currentLetter);
         if (pos != morseToChar.end())
         {          convertedText.push_back(pos->second);
@@ -97,12 +100,12 @@ wstring Decoder::convert(const wstring &morse,
           cout << "[WRN] ignoring [";
           for (const bool signal : currentLetter)
           {
-            cout << (signal ? settings.longSignal() : settings.shortSignal());
+            wcout << (signal ? settings.longSignal() : settings.shortSignal());
           }
           cout << "], is a not a morse letter" << endl;
         }
         currentLetter.clear();
-        convertedText.push_back(morse[i] == '\n' ? '\n' : ' ');
+        convertedText.push_back(character == '\n' ? '\n' : ' ');
         continue;
       }
       offset = endOfLetter(morse, i, settings);
@@ -125,7 +128,7 @@ wstring Decoder::convert(const wstring &morse,
         currentLetter.clear();
         continue;
       }
-      cout << "[WRN] ignoring {" << morse[i]
+      cout << "[WRN] ignoring {" << character
            << "}, unlisted in conversion settings" << endl;
     }
   }

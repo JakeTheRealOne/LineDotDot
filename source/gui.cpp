@@ -54,6 +54,10 @@ GUI::GUI()
 };
 
 
+GUI::~GUI()
+{
+}
+
 void GUI::buildBars()
 {
   closeButton.setParent(&topBar);
@@ -136,18 +140,26 @@ void GUI::buildButtons()
   radioButton.setObjectName("radioButton");
   radioButton.setToolTip("open the broadcast center");
   settingsButton.setObjectName("settingsButton");
+
   textButton.setObjectName("textButton");
   this->connect(&textButton, &QPushButton::clicked, this,
                 &GUI::switchToTextMode);
+  textButton.setCheckable(true);
+
   fileButton.setObjectName("fileButton");
   this->connect(&fileButton, &QPushButton::clicked, this,
                 &GUI::switchToFileMode);
+  fileButton.setCheckable(true);
+
   materialButton.setObjectName("materialButton");
   this->connect(&materialButton, &QPushButton::clicked, this,
                 &GUI::switchToMaterialMode);
+  materialButton.setCheckable(true);
+
   flashButton.setObjectName("flashButton");
   this->connect(&flashButton, &QPushButton::clicked, this,
                 &GUI::switchToFlashMode);
+  flashButton.setCheckable(true);
 }
 
 
@@ -165,16 +177,17 @@ void GUI::buildStyle()
     "QScrollBar::sub-line, QScrollBar::add-line { border: none; background: none; height: 0px; subcontrol-origin: margin;}"
     "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0"
     "0.5em; border-radius: 0.35em; padding: 0.5em 0.25em 0.25em 0.5em;}"
+    "QPushButton:checked, QPushButton:checked:hover {background-color: #724DC7;}"
+    "QPushButton:hover {background-color: #454545;}"
     "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
     "0.8em; border: none;}"
-    "QPushButton:hover {background-color: #454545;}"
     // "QMenu::item {border-radius: 3px; margin: 0.2em; padding: 0.2em; font-size: 16px;}"// background-color: 060606; color: #FFFFFF;}"
 
     "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
     
     "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
     "#settingsButton, #radioButton, #encyclopediaButton {border-radius: "
-    "0.35em; padding: 0.3em 0.5em; background-color: 242424;}"
+    "0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
     "#settingsButton:hover, #radioButton:hover, #encyclopediaButton:hover "
     "{background-color: #2D2D2D;}"
     "#settingsButton {margin: 0 0.5em 0 0.5em;}"
@@ -192,7 +205,6 @@ void GUI::buildStyle()
     "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
     "#notificationText {padding: 0em; background-color: #181818; margin-right: 0.25em;}"
     "#notificationIcon {padding: 0em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
-
 );
 
   int bottomButtonSize = 55;
@@ -291,14 +303,14 @@ void GUI::notify(const QString& content, const char type, const int duration)
   if (notifAnimationRunning)
   {
     return; // for now we simply stop new notifications for coming
-    animationThread->exit(0);
+    notificationThread->exit(0);
     notifAnimationRunning = false;
   }
-  animationThread = QThread::create([this, content, type, duration]() {
+  notificationThread = QThread::create([this, content, type, duration]() {
         this->notifyHelper(content, type, duration);
     });
-  animationThread->start();
-  this->connect(animationThread, &QThread::finished, animationThread, &QObject::deleteLater);
+  notificationThread->start();
+  this->connect(notificationThread, &QThread::finished, notificationThread, &QObject::deleteLater);
 }
 
 
@@ -329,7 +341,7 @@ void GUI::notifyHelper(const QString& content, const char type, const int durati
       break;
     case 2: // warning
       notificationIcon.setText("");
-      notificationIcon.setStyleSheet("#notificationIcon {color: #FCD71C;}");
+      notificationIcon.setStyleSheet("#notificationIcon {color: #FFAA5B;}");
       break;
     case 3: // success
       notificationIcon.setText("");
@@ -361,14 +373,16 @@ void GUI::switchToTextMode()
 {
   if (currentMode == 0)
   {
+    textButton.setChecked(true);
     return; // Abort
   }
   currentMode = 0;
 
-  textButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
-  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  fileButton.setChecked(false);
+  materialButton.setChecked(false);
+  flashButton.setChecked(false);
+
+  buildStyle(); //< debugging because broken
 
   translateTextBox.show();
 }
@@ -378,14 +392,18 @@ void GUI::switchToFileMode()
 {
   if (currentMode == 1)
   {
+    fileButton.setChecked(true);
     return; // Abort
   }
   currentMode = 1;
 
-  fileButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
-  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  textButton.setChecked(false);
+  materialButton.setChecked(false);
+  flashButton.setChecked(false);
+
+  buildStyle(); //< debugging because broken
+
+  notify("available soon", 2, 3);
 
   translateTextBox.hide();
 }
@@ -395,14 +413,19 @@ void GUI::switchToMaterialMode()
 {
   if (currentMode == 2)
   {
+    materialButton.setChecked(true);
     return; // Abort
   }
   currentMode = 2;
 
-  materialButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
-  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  flashButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  textButton.setChecked(false);
+  fileButton.setChecked(false);
+  flashButton.setChecked(false);
+
+  buildStyle(); //< debugging because broken
+
+
+  notify("available soon", 2, 3);
 
   translateTextBox.hide();
 }
@@ -412,14 +435,18 @@ void GUI::switchToFlashMode()
 {
   if (currentMode == 3)
   {
+    flashButton.setChecked(true);
     return; // Abort
   }
   currentMode = 3;
 
-  flashButton.setStyleSheet("QPushButton {background-color: #724DC7;}");
-  fileButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  materialButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
-  textButton.setStyleSheet("QPushButton {background-color: #2E2E2E} QPushButton:hover {background-color: #454545}");
+  textButton.setChecked(false);
+  materialButton.setChecked(false);
+  fileButton.setChecked(false);
+
+  buildStyle(); //< debugging because broken
+
+  notify("available soon", 2, 3);
 
   translateTextBox.hide();
 }

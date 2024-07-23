@@ -60,7 +60,7 @@ public:
    * @brief Destroy the GUI object
    * 
    */
-  ~GUI() = default;
+  ~GUI();
 
   // #### Open methods: ####
 
@@ -95,7 +95,7 @@ private:
     notificationText;
   QPropertyAnimation notificationAnimation = QPropertyAnimation(&notificationBox, "size");
   QMenu textBoxMenu;
-  QThread* animationThread;
+  QThread* notificationThread;
 
   bool inputIsMorse = false, notifAnimationRunning = false;
   char currentMode =

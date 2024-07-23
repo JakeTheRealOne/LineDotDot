@@ -126,16 +126,16 @@ unordered_map<wchar_t, vector<bool>> buildCTM()
 
 
     unordered_map<wchar_t, vector<bool>> characterToMorse;
-    for (const pair<char, vector<bool>>& letter : alphaToMorse)
+    for (const auto& letter : alphaToMorse)
     {
         characterToMorse.insert(letter);
-    } for (const pair<char, vector<bool>>& num : decimalToMorse)
+    } for (const auto& num : decimalToMorse)
     {
         characterToMorse.insert(num);
-    } for (const pair<char, vector<bool>>& special : specharToMorse)
+    } for (const auto& special : specharToMorse)
     {
         characterToMorse.insert(special);
-    } for (const pair<wchar_t, vector<bool>>& accent : acccharToMorse)
+    } for (const auto& accent : acccharToMorse)
     {
       characterToMorse.insert(accent);
     }
@@ -213,58 +213,19 @@ unordered_map<vector<bool>, wchar_t> buildMTC()
     };
 
     unordered_map<vector<bool>, wchar_t> morseToCharacter;
-    for (const pair<vector<bool>, char>& letter : morseToAlpha)
+    for (const auto& letter : morseToAlpha)
     {
         morseToCharacter.insert(letter);
-    } for (const pair<vector<bool>, char>& num : morseToDecimal)
+    } for (const auto& num : morseToDecimal)
     {
         morseToCharacter.insert(num);
-    } for (const pair<vector<bool>, char>& special : morseToSpechar)
+    } for (const auto& special : morseToSpechar)
     {
         morseToCharacter.insert(special);
-    } for (const pair<vector<bool>, wchar_t>& accent : morseToAccchar)
+    } for (const auto& accent : morseToAccchar)
     {
         morseToCharacter.insert(accent);
     }
 
     return morseToCharacter;
 }
-
-// const unordered_map<wchar_t, vector<bool>> acccharToMorse =
-// {
-//   {L'ä', {0, 1, 0, 1}},
-//   {L'à', {0, 1, 1, 0, 1}},
-//   {L'ç', {1, 0, 1, 0, 0}},
-//   {L'ð', {0, 0, 1, 1, 0}},
-//   {L'è', {0, 1, 0, 0, 1}},
-//   {L'é', {0, 0, 1, 0, 0}},
-//   {L'ĝ', {1, 1, 0, 1, 0}},
-//   {L'ĥ', {1, 0, 1, 1, 0}},
-//   {L'ĵ', {0, 1, 1, 1, 0}},
-//   {L'ñ', {1, 1, 0, 1, 1}},
-//   {L'ö', {1, 1, 1, 0}},
-//   {L'ŝ', {0, 0, 0, 1, 0}},
-//   {L'þ', {0, 1, 1, 0, 0}},
-//   {L'ü', {0, 0, 1, 1}},
-// };
-
-// # include <iostream>
-// # include <locale>
-// int main()
-// {
-//   std::locale::global(std::locale(""));  // Set the global locale to the user’s default
-//   std::wcout.imbue(std::locale()); 
-//   wcout << L"const unordered_map<vector<bool>, wchar_t> morseToAccchar =\n{\n";
-//   for (const auto& pair : acccharToMorse)
-//   {
-//     wcout << L"  {{";
-//     for (const bool signal : pair.second)
-//     {
-//       wcout << signal << ", ";
-//     }
-//     wcout << L"}, L'" << (wchar_t)pair.first << L"'},\n";
-//   }
-
-//   wcout << "};\n";
-//   return 0;
-// }
