@@ -24,6 +24,7 @@
 # include <QPainter>
 # include <QPainterPath>
 # include <QColor>
+# include <QFont>
 
 About::About()
 {
@@ -37,12 +38,20 @@ void About::buildChildren()
 {
   this->setWindowTitle("About");
   appName.setObjectName("appName");
+  appName.setParent(&nameBox);
   appVersion.setObjectName("appVersion");
+  appVersion.setParent(&versionBox);
 }
 
 
 void About::buildStyle()
 {
+  versionFont.setBold(true);
+  versionBox.setFont(versionFont);
+
+  nameFont.setBold(true);
+  nameBox.setFont(nameFont);
+
   this->setWindowFlags(Qt::FramelessWindowHint);
   this->setAttribute(Qt::WA_TranslucentBackground);
   this->setStyleSheet(
@@ -56,17 +65,16 @@ void About::buildStyle()
 
 void About::buildLayouts()
 {
-  // nameLayout.addStretch();
-  // nameLayout.addWidget(&appName);
-  // nameLayout.addStretch();
-  // nameBox.setLayout(&nameLayout);
 
-  // versionLayout.addStretch();
-  // versionLayout.addWidget(&appVersion);
-  // versionLayout.addStretch();
-  // versionBox.setLayout(&versionLayout);
+  nameLayout.addStretch();
+  nameLayout.addWidget(&appName);
+  nameLayout.addStretch();
+  nameBox.setLayout(&nameLayout);
 
-
+  versionLayout.addStretch();
+  versionLayout.addWidget(&appVersion);
+  versionLayout.addStretch();
+  versionBox.setLayout(&versionLayout);
 
   mainLayout.addWidget(&nameBox);
   mainLayout.addWidget(&versionBox);
@@ -80,16 +88,16 @@ void About::buildLayouts()
 
 void About::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
+  QPainter painter(this);
+  painter.setRenderHint(QPainter::Antialiasing);
 
-    if (!isMaximized() and !isFullScreen()) {
-        QPainterPath path;
-        path.addRoundedRect(rect(), 15, 15);
-        painter.fillPath(path, QColor(36, 36, 36));
-    } else {
-        painter.fillRect(rect(), QColor(36, 36, 36));
-    }
+  if (!isMaximized() and !isFullScreen()) {
+    QPainterPath path;
+    path.addRoundedRect(rect(), 15, 15);
+    painter.fillPath(path, QColor(36, 36, 36));
+  } else {
+    painter.fillRect(rect(), QColor(36, 36, 36));
+  }
 
-    QWidget::paintEvent(nullptr);
+  QWidget::paintEvent(nullptr);
 }

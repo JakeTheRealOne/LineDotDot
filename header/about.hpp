@@ -27,6 +27,7 @@ using namespace std;
 # include <QHBoxLayout>
 # include <QPainter>
 # include <QPainterPath>
+# include <QFont>
 
 
 extern string APPNAME, APPVERSION;
@@ -53,7 +54,7 @@ public:
   * @brief Destroy the About object
   * 
   */
-  // ~About() = default; Removing because it leads to a Stack smashing
+  //~About() = default; // Removing because it leads to a Stack smashing
 
 private:
   // #### Attributes: ####
@@ -63,7 +64,7 @@ private:
   QVBoxLayout mainLayout, buttonsLayout;
   QHBoxLayout versionLayout, nameLayout;
   QWidget versionBox, nameBox, buttonsBox;
-
+  QFont versionFont = appVersion.font(), nameFont = appName.font();
 
 // #### Auxiliary methods: ####
 
