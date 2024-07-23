@@ -14,5 +14,5 @@
 # include <string>
 using namespace std;
 
-const string APPNAME = "LineDotDot";
-const string APPVERSION = "0.1";
+string APPNAME = "LineDotDot";
+string APPVERSION = "0.1";

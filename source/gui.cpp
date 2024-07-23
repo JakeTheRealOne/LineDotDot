@@ -37,6 +37,7 @@ using namespace std;
 # include "../header/gui.hpp"
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
+# include "../header/about.hpp"
 
 
 GUI::GUI()
@@ -51,10 +52,6 @@ GUI::GUI()
   buildStyle();
 };
 
-
-GUI::~GUI()
-{
-}
 
 void GUI::buildBars()
 {
@@ -279,9 +276,11 @@ void GUI::buildNotification()
 
 void GUI::buildMenus()
 {
-  settingsMenu.addAction(new QAction("Language"));
+  QAction* aboutAction = new QAction("About LineDotDot");
+  settingsMenu.addAction(new QAction("Langage"));
   settingsMenu.addAction(new QAction("Dark theme"));
-  settingsMenu.addAction(new QAction("About LineDotDot"));
+  settingsMenu.addAction(aboutAction);
+  this->connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
 }
 
 

@@ -24,9 +24,10 @@ using namespace std;
 # include <QPushButton>
 # include <QLayout>
 # include <QVBoxLayout>
+# include <QHBoxLayout>
 
 
-const extern string APPNAME, APPVERSION;
+extern string APPNAME, APPVERSION;
 
 
 /**
@@ -50,14 +51,17 @@ public:
   * @brief Destroy the About object
   * 
   */
-  ~About() = default;
+  // ~About() = default; Removing because it leads to a Stack smashing
 
 private:
   // #### Attributes: ####
 
   QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION));
   QPushButton toWebsite = QPushButton("Github page"), closeButton = QPushButton("X");
-  QHBoxLayout mainLayout;
+  QVBoxLayout mainLayout, buttonsLayout;
+  QHBoxLayout versionLayout, nameLayout;
+  QWidget versionBox, nameBox, buttonsBox;
+
 
 // #### Auxiliary methods: ####
 

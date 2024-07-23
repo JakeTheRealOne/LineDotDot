@@ -40,7 +40,7 @@ using namespace std;
 // #### Intern inclusions: ####
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
-
+# include "../header/about.hpp"
 
 /**
  * @brief Interface of the application
@@ -63,7 +63,7 @@ public:
    * @brief Destroy the GUI object
    * 
    */
-  ~GUI();
+  // ~GUI(); Removing because it leads to a Stack smashing
 
   // #### Open methods: ####
 
@@ -98,6 +98,8 @@ private:
     notificationText;
   QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
+  About aboutPage;
+
 
   bool inputIsMorse = false, notification = false;
   char currentMode =
