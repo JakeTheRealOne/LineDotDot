@@ -38,7 +38,8 @@ using namespace std;
 
 // #### Intern inclusions: ####
 # include "../header/gui.hpp"
-# include "../header/convert.hpp"
+# include "../header/decoder.hpp"
+# include "../header/encoder.hpp"
 
 
 GUI::GUI()

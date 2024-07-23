@@ -54,12 +54,14 @@ OBJECTS_DIR   = object/
 
 SOURCES       = source/encyclopedia.cpp \
 		source/settings.cpp \
-		source/convert.cpp \
+		source/decoder.cpp \
+		source/encoder.cpp \
 		source/gui.cpp \
 		source/main.cpp 
 OBJECTS       = object/encyclopedia.o \
 		object/settings.o \
-		object/convert.o \
+		object/decoder.o \
+		object/encoder.o \
 		object/gui.o \
 		object/main.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -216,10 +218,12 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		gui.pro header/encyclopedia.hpp \
 		header/settings.hpp \
-		header/convert.hpp \
+		header/decoder.hpp \
+		header/encoder.hpp \
 		header/gui.hpp source/encyclopedia.cpp \
 		source/settings.cpp \
-		source/convert.cpp \
+		source/decoder.cpp \
+		source/encoder.cpp \
 		source/gui.cpp \
 		source/main.cpp
 QMAKE_TARGET  = LineDotDot
@@ -555,8 +559,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/convert.hpp header/gui.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents source/encyclopedia.cpp source/settings.cpp source/convert.cpp source/gui.cpp source/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/decoder.hpp header/encoder.hpp header/gui.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/gui.cpp source/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -612,10 +616,15 @@ object/encyclopedia.o: source/encyclopedia.cpp header/encyclopedia.hpp
 object/settings.o: source/settings.cpp header/settings.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/settings.o source/settings.cpp
 
-object/convert.o: source/convert.cpp header/convert.hpp \
+object/decoder.o: source/decoder.cpp header/decoder.hpp \
 		header/settings.hpp \
 		header/encyclopedia.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/convert.o source/convert.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/decoder.o source/decoder.cpp
+
+object/encoder.o: source/encoder.cpp header/encoder.hpp \
+		header/settings.hpp \
+		header/encyclopedia.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/encoder.o source/encoder.cpp
 
 object/gui.o: source/gui.cpp header/gui.hpp \
 		header/convert.hpp \

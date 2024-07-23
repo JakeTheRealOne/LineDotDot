@@ -1,34 +1,24 @@
 /**
- * @file convert.hpp
+ * @file decoder.hpp
  * @author JakeTheRealOne (jakelevrai@outlook.be)
- * @brief Header file of Encoder and Decoder namespaces
+ * @brief Header file for the morse Decoder
  * @version 0.1
- * @date 21-07-2024
+ * @date 23-07-2024
  * 
  * @copyright Copyright (c) 2024
  * 
  */
 
-# ifndef CONVERT_HPP
-# define CONVERT_HPP
+
+# ifndef DECODER_HPP
+# define DECODER_HPP
 
 
+// #### Internal inclusions: ####
+# include "../header/settings.hpp"
+
+// #### Std inclusions: ####
 # include <string>
-# include "settings.hpp"
-using namespace std;
-
-
-namespace Encoder {
-/**
- * @brief Convert an alpha text (A-Z | a-z | 0-9 | ASCII special char) 
- * 
- * @param text The alpha text
- * @param settings The settings of conversion
- * @return string The morse text
- */
-wstring convert (const wstring& text, const ConversionSettings& settings = ConversionSettings());
-}
-
 
 
 namespace Decoder {
@@ -61,8 +51,6 @@ int endOfLetter(const wstring& morse, int index, const ConversionSettings& setti
  */
 int endOfWord(const wstring& morse, int index, const ConversionSettings& settings);
 }
-
-
 
 
 # endif
