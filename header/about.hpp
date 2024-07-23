@@ -25,6 +25,8 @@ using namespace std;
 # include <QLayout>
 # include <QVBoxLayout>
 # include <QHBoxLayout>
+# include <QPainter>
+# include <QPainterPath>
 
 
 extern string APPNAME, APPVERSION;
@@ -82,6 +84,14 @@ private:
    * 
    */
   void buildStyle();
+
+protected:
+
+  /**
+   * @brief Apply rounded corners
+   * 
+   */
+  void paintEvent(QPaintEvent *);
 };
 
 

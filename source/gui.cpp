@@ -27,6 +27,9 @@
 # include <QMenu>
 # include <QAction>
 # include <QThread>
+# include <QPainter>
+# include <QPainterPath>
+# include <QColor>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -161,36 +164,11 @@ void GUI::buildButtons()
 void GUI::buildStyle()
 {
   this->setMinimumSize(400, 400);
-
-  closeButton.setStyleSheet(
-    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
-  );
-  settingsButton.setStyleSheet(
-    "#settingsButton {margin: 0 0.5em 0 0.5em; border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
-    "#settingsButton:hover {background-color: #2D2D2D;}"
-  );
-
-  radioButton.setStyleSheet(
-    "#radioButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0;}"
-    "#radioButton:hover {background-color: #2D2D2D;}"
-  );
-
-  encyclopediaButton.setStyleSheet(
-    "#encyclopediaButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0; font-size: 14px;}"
-    "#encyclopediaButton:hover {background-color: #2D2D2D;}"
-  );
-
-  warningLabel.setStyleSheet(
-    "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
-  );
-
-  swapButton.setStyleSheet(
-    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
-    "padding: 0.2em 0.4em;}"
-  );
+  this->setWindowTitle("LineDotDot");
+  this->setAttribute(Qt::WA_TranslucentBackground);
 
   this->setStyleSheet(
-    "QWidget {color: #FFFFFF; background-color: #242424;}"
+    "QWidget {color: #FFFFFF;}"
     "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
     "solid #FFFFFF; border-radius: 0.3em; padding: 0.1em;}"
     "QAbstractScrollArea::corner { background: none; border: none;}"
@@ -203,7 +181,10 @@ void GUI::buildStyle()
     "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
     "0.8em; border: none;}"
     "QPushButton:hover {background-color: #454545; border: none;}"
+    "QPushButton::menu-indicator {image: none; width: 0; height: 0;}"
     // "QMenu::item {border-radius: 3px; margin: 0.2em; padding: 0.2em; font-size: 16px;}"// background-color: 060606; color: #FFFFFF;}"
+
+    "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
 
     "#textButton, #fileButton, #materialButton, #flashButton {margin: "
     "0.1em;}"
@@ -211,10 +192,23 @@ void GUI::buildStyle()
     "#fileButton, #materialButton {font-size: 19px; padding: 0.56em}"
     "#flashButton {border-top-right-radius: 0.7em;}"
 
+    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
+    "#settingsButton {margin: 0 0.5em 0 0.5em; border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
+    "#settingsButton:hover {background-color: #2D2D2D;}"
+
+    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
+    "padding: 0.2em 0.4em;}"
+
+    "#radioButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0;}"
+    "#radioButton:hover {background-color: #2D2D2D;}"
+
+    "#encyclopediaButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0; font-size: 14px;}"
+    "#encyclopediaButton:hover {background-color: #2D2D2D;}"
+
     "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
     "#notificationText {padding: 0em; background-color: #181818; margin-right: 0.25em;}"
     "#notificationIcon {padding: 0em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
-);
+  );
 
   int bottomButtonSize = 55;
 
@@ -388,8 +382,10 @@ void GUI::switchToTextMode()
   }
   currentMode = 0;
 
-  bottomBar.setStyleSheet("#materialButton, #fileButton, #flashButton {background-color: #2E2E2E;} #textButton {background-color: #724DC7;}");
-  buildStyle();
+  textButton.setStyleSheet("background-color: #724DC7;");
+  fileButton.setStyleSheet("background-color: #2E2E2E;");
+  materialButton.setStyleSheet("background-color: #2E2E2E;");
+  flashButton.setStyleSheet("background-color: #2E2E2E;");
 
   translateTextBox.show();
 }
@@ -404,8 +400,10 @@ void GUI::switchToFileMode()
   }
   currentMode = 1;
 
-  bottomBar.setStyleSheet("#textButton, #materialButton, #flashButton {background-color: #2E2E2E;} #fileButton {background-color: #724DC7;}");
-  buildStyle();
+  textButton.setStyleSheet("background-color: #2E2E2E;");
+  fileButton.setStyleSheet("background-color: #724DC7;");
+  materialButton.setStyleSheet("background-color: #2E2E2E;");
+  flashButton.setStyleSheet("background-color: #2E2E2E;");
 
   notify("available soon", 2, 3);
 
@@ -421,8 +419,10 @@ void GUI::switchToMaterialMode()
   }
   currentMode = 2;
 
-  bottomBar.setStyleSheet("#textButton, #fileButton, #flashButton {background-color: #2E2E2E;} #materialButton {background-color: #724DC7;}");
-  buildStyle();
+  textButton.setStyleSheet("background-color: #2E2E2E;");
+  fileButton.setStyleSheet("background-color: #2E2E2E;");
+  materialButton.setStyleSheet("background-color: #724DC7;");
+  flashButton.setStyleSheet("background-color: #2E2E2E;");
 
   notify("available soon", 2, 3);
 
@@ -438,8 +438,10 @@ void GUI::switchToFlashMode()
   }
   currentMode = 3;
 
-  bottomBar.setStyleSheet("#textButton, #fileButton, #materialButton {background-color: #2E2E2E;} #flashButton {background-color: #724DC7;}");
-  buildStyle();
+  textButton.setStyleSheet("background-color: #2E2E2E;");
+  fileButton.setStyleSheet("background-color: #2E2E2E;");
+  materialButton.setStyleSheet("background-color: #2E2E2E;");
+  flashButton.setStyleSheet("background-color: #724DC7;");
 
   notify("available soon", 2, 3);
 
@@ -479,4 +481,21 @@ void GUI::toggleRadio()
 void GUI::toggleSettings()
 {
   notify("open the menu settings", 5, 3);
+}
+
+
+void GUI::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    if (!isMaximized()) {
+        QPainterPath path;
+        path.addRoundedRect(rect(), 15, 15);
+        painter.fillPath(path, QColor(36, 36, 36));
+    } else {
+        painter.fillRect(rect(), QColor(36, 36, 36));
+    }
+
+    QWidget::paintEvent(nullptr);
 }

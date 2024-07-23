@@ -21,7 +21,9 @@
 # include <QLayout>
 # include <QVBoxLayout>
 # include <QHBoxLayout>
-
+# include <QPainter>
+# include <QPainterPath>
+# include <QColor>
 
 About::About()
 {
@@ -33,6 +35,7 @@ About::About()
 
 void About::buildChildren()
 {
+  this->setWindowTitle("About");
   appName.setObjectName("appName");
   appVersion.setObjectName("appVersion");
 }
@@ -40,23 +43,52 @@ void About::buildChildren()
 
 void About::buildStyle()
 {
+  this->setAttribute(Qt::WA_TranslucentBackground);
   this->setStyleSheet(
     "QWidget {background-color: #242424; color: #FFFFFF; padding: 0.25em; margin: 0.25em; font-size: 18px; border-radius: 3px;}"
     "QPushButton {background-color: #353535; font-size: 18px; border-radius: 0.35em;}"
     "QPushButton:hover {background-color: #3B3B3B;}"
-    "#appVersion {font-size: 14px; border-radius: 0.6em; color: #73A5E1; background-color: #2C3138; padding: 0.2em 0.1em;}"
+    "#appVersion {font-size: 14px; border-radius: 0.71em; color: #73A5E1; background-color: #2C3138; padding: 0.25em 1em;}"
   );
 }
 
 
 void About::buildLayouts()
 {
-  mainLayout.addWidget(&appName);
-  mainLayout.addWidget(&appVersion);
-  mainLayout.addWidget(&toWebsite);
+  // nameLayout.addStretch();
+  // nameLayout.addWidget(&appName);
+  // nameLayout.addStretch();
+  // nameBox.setLayout(&nameLayout);
+
+  // versionLayout.addStretch();
+  // versionLayout.addWidget(&appVersion);
+  // versionLayout.addStretch();
+  // versionBox.setLayout(&versionLayout);
+
+
+
+  mainLayout.addWidget(&nameBox);
+  mainLayout.addWidget(&versionBox);
+  // mainLayout.addWidget(&);
   this->setLayout(&mainLayout);
   mainLayout.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
   appName.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
   appVersion.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
 
+}
+
+void About::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    if (!isMaximized()) {
+        QPainterPath path;
+        path.addRoundedRect(rect(), 15, 15);
+        painter.fillPath(path, QColor(36, 36, 36));
+    } else {
+        painter.fillRect(rect(), QColor(36, 36, 36));
+    }
+
+    QWidget::paintEvent(nullptr);
 }

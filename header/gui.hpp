@@ -31,6 +31,8 @@
 # include <QMenu>
 # include <QAction>
 # include <QThread>
+# include <QPainter>
+# include <QPainterPath>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -103,7 +105,7 @@ private:
 
   bool inputIsMorse = false, notification = false;
   char currentMode =
-    0; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
+    -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
 
   // #### Auxiliary methods: ####
 
@@ -226,6 +228,14 @@ private:
     * 
     */
     void toggleSettings();
+
+protected:
+
+  /**
+  * @brief Apply rounded corners to the 
+  * 
+  */
+  void paintEvent(QPaintEvent *);
 };
 
 
