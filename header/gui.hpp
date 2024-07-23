@@ -28,7 +28,6 @@
 # include <QTextEdit>
 # include <QVBoxLayout>
 # include <QWidget>
-# include <QPropertyAnimation>
 # include <QMenu>
 # include <QAction>
 # include <QThread>
@@ -39,7 +38,6 @@
 using namespace std;
 
 // #### Intern inclusions: ####
-# include "../header/gui.hpp"
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
 
@@ -94,13 +92,12 @@ private:
     QLabel("File mode is recommended for processing large amounts of data."),
     notificationIcon,
     notificationText;
-  QPropertyAnimation notificationAnimation = QPropertyAnimation(&notificationBox, "size");
   QMenu textBoxMenu;
   QThread* notificationThread;
 
-  bool inputIsMorse = false, notifAnimationRunning = false;
+  bool inputIsMorse = false, notification = false;
   char currentMode =
-    -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
+    0; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
 
   // #### Auxiliary methods: ####
 

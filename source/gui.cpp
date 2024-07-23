@@ -27,13 +27,10 @@
 # include <QMenu>
 # include <QAction>
 # include <QThread>
-# include <QPropertyAnimation>
 
 // #### Std inclusions: ####
 # include <iostream>
 # include <string>
-# include <thread>
-# include <chrono>
 using namespace std;
 
 // #### Intern inclusions: ####
@@ -47,11 +44,11 @@ GUI::GUI()
   buildButtons();
   buildBars();
   buildLayouts();
-  buildTranslateBox();
   buildMenus();
   buildNotification();
-  buildStyle();
   buildAnimations();
+  buildTranslateBox();
+  buildStyle();
 };
 
 
@@ -145,28 +142,52 @@ void GUI::buildButtons()
   textButton.setObjectName("textButton");
   this->connect(&textButton, &QPushButton::clicked, this,
                 &GUI::switchToTextMode);
-  textButton.setCheckable(true);
 
   fileButton.setObjectName("fileButton");
   this->connect(&fileButton, &QPushButton::clicked, this,
                 &GUI::switchToFileMode);
-  fileButton.setCheckable(true);
 
   materialButton.setObjectName("materialButton");
   this->connect(&materialButton, &QPushButton::clicked, this,
                 &GUI::switchToMaterialMode);
-  materialButton.setCheckable(true);
 
   flashButton.setObjectName("flashButton");
   this->connect(&flashButton, &QPushButton::clicked, this,
                 &GUI::switchToFlashMode);
-  flashButton.setCheckable(true);
 }
 
 
 void GUI::buildStyle()
 {
   this->setMinimumSize(400, 400);
+
+  closeButton.setStyleSheet(
+    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
+  );
+  settingsButton.setStyleSheet(
+    "#settingsButton {margin: 0 0.5em 0 0.5em; border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
+    "#settingsButton:hover {background-color: #2D2D2D;}"
+  );
+
+  radioButton.setStyleSheet(
+    "#radioButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0;}"
+    "#radioButton:hover {background-color: #2D2D2D;}"
+  );
+
+  encyclopediaButton.setStyleSheet(
+    "#encyclopediaButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0; font-size: 14px;}"
+    "#encyclopediaButton:hover {background-color: #2D2D2D;}"
+  );
+
+  warningLabel.setStyleSheet(
+    "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
+  );
+
+  swapButton.setStyleSheet(
+    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
+    "padding: 0.2em 0.4em;}"
+  );
+
   this->setStyleSheet(
     "QWidget {color: #FFFFFF; background-color: #242424;}"
     "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
@@ -178,24 +199,10 @@ void GUI::buildStyle()
     "QScrollBar::sub-line, QScrollBar::add-line { border: none; background: none; height: 0px; subcontrol-origin: margin;}"
     "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0"
     "0.5em; border-radius: 0.35em; padding: 0.5em 0.25em 0.25em 0.5em;}"
-    "QPushButton:checked, QPushButton:checked:hover {background-color: #724DC7;}"
-    "QPushButton:hover {background-color: #454545;}"
     "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
     "0.8em; border: none;}"
+    "QPushButton:hover {background-color: #454545; border: none;}"
     // "QMenu::item {border-radius: 3px; margin: 0.2em; padding: 0.2em; font-size: 16px;}"// background-color: 060606; color: #FFFFFF;}"
-
-    "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
-    
-    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
-    "#settingsButton, #radioButton, #encyclopediaButton {border-radius: "
-    "0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
-    "#settingsButton:hover, #radioButton:hover, #encyclopediaButton:hover "
-    "{background-color: #2D2D2D;}"
-    "#settingsButton {margin: 0 0.5em 0 0.5em;}"
-    "#encyclopediaButton {margin: 0 0.5em 0 0; font-size: 14px;}"
-    "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
-    "padding: 0.2em 0.4em;}"
-    "#radioButton {margin: 0 0.5em 0 0;}"
 
     "#textButton, #fileButton, #materialButton, #flashButton {margin: "
     "0.1em;}"
@@ -247,7 +254,7 @@ void GUI::buildTranslateBox()
 
 void GUI::buildAnimations()
 {
-  notificationAnimation.setDuration(300);
+  // notificationThread->setPriority(QThread::LowestPriority);
 }
 
 
@@ -301,16 +308,15 @@ void GUI::notificationPopup()
 
 void GUI::notify(const QString& content, const char type, const int duration)
 {
-  if (notifAnimationRunning)
+  if (notification)
   {
-    return; // for now we simply stop new notifications for coming
-    notificationThread->exit(0);
-    notifAnimationRunning = false;
+    return;
   }
   notificationThread = QThread::create([this, content, type, duration]() {
         this->notifyHelper(content, type, duration);
     });
   notificationThread->start();
+  notificationThread->setPriority(QThread::LowestPriority);
   this->connect(notificationThread, &QThread::finished, notificationThread, &QObject::deleteLater);
 }
 
@@ -318,16 +324,14 @@ void GUI::notify(const QString& content, const char type, const int duration)
 void GUI::notifyHelper(const QString& content, const char type, const int duration)
 {
   // init the notification box
-  notifAnimationRunning = true;
+  QThread::msleep(250);
   if (content.size() > 64)
   {
     cout << "[ERR] cannot display notification with 64 or more characters" << endl;
-    notifAnimationRunning = false;
     return;
   } else if (not content.size())
   {
     cout << "[ERR] cannot display empty notification" << endl;
-    notifAnimationRunning = false;
     return;
   }
   switch (type)
@@ -358,15 +362,16 @@ void GUI::notifyHelper(const QString& content, const char type, const int durati
       break;
     default:
       cout << "[ERR] unknown type for notification (should be 0 -> 5)" << endl;
-      notifAnimationRunning = false;
+
       return;
   }
+  notification = true;
   cout << "[NTF] " << content.toStdString() << endl;
   notificationText.setText(content);
-  notificationPopup();  
-  QThread::sleep(duration);
+  notificationPopup();
+  QThread::msleep(duration);
   notificationBox.hide();
-  notifAnimationRunning = false;
+  notification = false; // end of notification
 }
 
 
@@ -374,16 +379,12 @@ void GUI::switchToTextMode()
 {
   if (currentMode == 0)
   {
-    textButton.setChecked(true);
     return; // Abort
   }
   currentMode = 0;
 
-  fileButton.setChecked(false);
-  materialButton.setChecked(false);
-  flashButton.setChecked(false);
-
-  buildStyle(); //< debugging because broken
+  bottomBar.setStyleSheet("#materialButton, #fileButton, #flashButton {background-color: #2E2E2E;} #textButton {background-color: #724DC7;}");
+  buildStyle();
 
   translateTextBox.show();
 }
@@ -398,11 +399,8 @@ void GUI::switchToFileMode()
   }
   currentMode = 1;
 
-  textButton.setChecked(false);
-  materialButton.setChecked(false);
-  flashButton.setChecked(false);
-
-  buildStyle(); //< debugging because broken
+  bottomBar.setStyleSheet("#textButton, #materialButton, #flashButton {background-color: #2E2E2E;} #fileButton {background-color: #724DC7;}");
+  buildStyle();
 
   notify("available soon", 2, 3);
 
@@ -414,17 +412,12 @@ void GUI::switchToMaterialMode()
 {
   if (currentMode == 2)
   {
-    materialButton.setChecked(true);
     return; // Abort
   }
   currentMode = 2;
 
-  textButton.setChecked(false);
-  fileButton.setChecked(false);
-  flashButton.setChecked(false);
-
-  buildStyle(); //< debugging because broken
-
+  bottomBar.setStyleSheet("#textButton, #fileButton, #flashButton {background-color: #2E2E2E;} #materialButton {background-color: #724DC7;}");
+  buildStyle();
 
   notify("available soon", 2, 3);
 
@@ -436,16 +429,12 @@ void GUI::switchToFlashMode()
 {
   if (currentMode == 3)
   {
-    flashButton.setChecked(true);
     return; // Abort
   }
   currentMode = 3;
 
-  textButton.setChecked(false);
-  materialButton.setChecked(false);
-  fileButton.setChecked(false);
-
-  buildStyle(); //< debugging because broken
+  bottomBar.setStyleSheet("#textButton, #fileButton, #materialButton {background-color: #2E2E2E;} #flashButton {background-color: #724DC7;}");
+  buildStyle();
 
   notify("available soon", 2, 3);
 

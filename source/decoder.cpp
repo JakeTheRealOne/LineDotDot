@@ -33,9 +33,9 @@ wstring Decoder::convert(const wstring &morse,
   unsigned long n = morse.size(), offset;
   wchar_t character; 
   vector<bool> currentLetter;
-  for (unsigned long i = 0; i < n; ++i)
+  for (unsigned long index = 0; index < n; ++ index)
   {
-    character = morse[i];
+    character = morse[index];
     if (character == settings.shortSignal())
     {
       currentLetter.push_back(0);
@@ -44,68 +44,50 @@ wstring Decoder::convert(const wstring &morse,
       currentLetter.push_back(1);
     } else
     {
-      offset = endOfWord(morse, i, settings);
+      offset = endOfWord(morse, index, settings);
       if (offset or character == '\n')
       {
-        i += (character == '\n' ? offset : offset - 1);
-        const auto &pos = morseToChar.find(currentLetter);
-        if (pos != morseToChar.end())
-        {          convertedText.push_back(pos->second);
-        } else
-        {
-          cout << "[WRN] ignoring [";
-          for (const bool signal : currentLetter)
-          {
-            wcout << (signal ? settings.longSignal() : settings.shortSignal());
-          }
-          cout << "], is a not a morse letter" << endl;
-        }
-        currentLetter.clear();
+        index += (character == '\n' ? offset : offset - 1);
+        addLetterTo(convertedText, currentLetter, settings);
         convertedText.push_back(character == '\n' ? '\n' : ' ');
         continue;
       }
-      offset = endOfLetter(morse, i, settings);
+      offset = endOfLetter(morse, index, settings);
       if (offset)
       {
-        i += offset - 1;
-        const auto &pos = morseToChar.find(currentLetter);
-        if (pos != morseToChar.end())
-        {
-          convertedText.push_back(pos->second);
-        } else
-        {
-          cout << "[WRN] ignoring [";
-          for (const bool signal : currentLetter)
-          {
-            cout << (signal ? settings.longSignal() : settings.shortSignal());
-          }
-          cout << "], is a not a morse letter" << endl;
-        }
-        currentLetter.clear();
+        index += offset - 1;
+        addLetterTo(convertedText, currentLetter, settings);
         continue;
       }
-      cout << "[WRN] ignoring {" << character
+      wcout << "[WRN] ignoring {" << (wchar_t)character
            << "}, unlisted in conversion settings" << endl;
     }
   }
-  if (currentLetter.size())
-  {
-    const auto &pos = morseToChar.find(currentLetter);
-    if (pos != morseToChar.end())
-    {
-      convertedText.push_back(pos->second);
-    } else
-    {
-      cout << "[WRN] ignoring [";
-      for (const bool signal : currentLetter)
-      {
-        cout << (signal ? settings.longSignal() : settings.shortSignal());
-      }
-      cout << "], is a not a morse letter" << endl;
-    }
-    currentLetter.clear();
-  }
+  addLetterTo(convertedText, currentLetter, settings); //< last letter
   return convertedText;
+}
+
+
+void Decoder::addLetterTo(wstring& convertedText, vector<bool>& letter, const ConversionSettings& settings)
+{
+  if (letter.empty())
+  {
+    return;
+  }
+  const auto &pos = morseToChar.find(letter);
+  if (pos != morseToChar.end())
+  {
+    convertedText.push_back(pos->second);
+  } else
+  {
+    cout << "[WRN] ignoring [";
+    for (const bool signal : letter)
+    {
+      wcout << (wchar_t)(signal ? settings.longSignal() : settings.shortSignal());
+    }
+    cout << "], is a not a morse letter" << endl;
+  }
+  letter.clear();  
 }
 
 

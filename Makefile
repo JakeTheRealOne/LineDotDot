@@ -627,13 +627,15 @@ object/encoder.o: source/encoder.cpp header/encoder.hpp \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/encoder.o source/encoder.cpp
 
 object/gui.o: source/gui.cpp header/gui.hpp \
-		header/convert.hpp \
-		header/settings.hpp
+		header/decoder.hpp \
+		header/settings.hpp \
+		header/encoder.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui.o source/gui.cpp
 
 object/main.o: source/main.cpp header/gui.hpp \
-		header/convert.hpp \
-		header/settings.hpp
+		header/decoder.hpp \
+		header/settings.hpp \
+		header/encoder.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/main.o source/main.cpp
 
 ####### Install

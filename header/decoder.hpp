@@ -19,6 +19,7 @@
 
 // #### Std inclusions: ####
 # include <string>
+# include <vector>
 
 
 namespace Decoder {
@@ -30,6 +31,15 @@ namespace Decoder {
  * @return string The alpha text
  */
 wstring convert (const wstring& morse, const ConversionSettings& settings = ConversionSettings());
+
+/**
+ * @brief Search a letter in the encyclopedia and add it to the converted text if exists
+ * 
+ * @param convertedText The text issue from the conversion
+ * @param letter A possible new letter to add to convertedText
+ * @param settings The settings of conversion
+ */
+void addLetterTo(wstring& convertedText, vector<bool>& letter, const ConversionSettings& settings);
 
 /**
  * @brief Check if morse[index:?] is the end of a letter
