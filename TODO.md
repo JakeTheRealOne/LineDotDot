@@ -1,4 +1,3 @@
-- Fixing convertMorse and its ugly code
 - Adding settings menu with options [Language | Dark theme | About LineDotDot]
 
 -> realease 0.1

@@ -63,11 +63,6 @@ void GUI::buildBars()
   radioButton.setParent(&topBar);
   settingsButton.setParent(&topBar);
 
-  this->connect(&encyclopediaButton, &QPushButton::clicked, this,
-                &GUI::toggleKnowledgeBook);
-  this->connect(&radioButton, &QPushButton::clicked, this,
-                &GUI::toggleRadio);
-
   textButton.setParent(&bottomBar);
   fileButton.setParent(&bottomBar);
   materialButton.setParent(&bottomBar);
@@ -133,11 +128,20 @@ void GUI::buildButtons()
   closeButton.setObjectName("closeButton");
   this->connect(&closeButton, &QPushButton::clicked, this,
                 &QApplication::quit);
+
   encyclopediaButton.setObjectName("encyclopediaButton");
   encyclopediaButton.setToolTip("open the knowledge book");
+  this->connect(&encyclopediaButton, &QPushButton::clicked, this,
+                &GUI::toggleKnowledgeBook);
+
   radioButton.setObjectName("radioButton");
   radioButton.setToolTip("open the broadcast center");
+  this->connect(&radioButton, &QPushButton::clicked, this,
+                &GUI::toggleRadio);
+
   settingsButton.setObjectName("settingsButton");
+  // this->connect(&settingsButton, &QPushButton::clicked, this, &GUI::toggleSettings);
+  settingsButton.setMenu(&settingsMenu);
 
   textButton.setObjectName("textButton");
   this->connect(&textButton, &QPushButton::clicked, this,
@@ -275,7 +279,9 @@ void GUI::buildNotification()
 
 void GUI::buildMenus()
 {
-
+  settingsMenu.addAction(new QAction("Language"));
+  settingsMenu.addAction(new QAction("Dark theme"));
+  settingsMenu.addAction(new QAction("About LineDotDot"));
 }
 
 
@@ -369,7 +375,7 @@ void GUI::notifyHelper(const QString& content, const char type, const int durati
   cout << "[NTF] " << content.toStdString() << endl;
   notificationText.setText(content);
   notificationPopup();
-  QThread::msleep(duration);
+  QThread::sleep(duration);
   notificationBox.hide();
   notification = false; // end of notification
 }
@@ -468,4 +474,10 @@ void GUI::toggleKnowledgeBook()
 void GUI::toggleRadio()
 {
   notify("not yet implemented", 1, 3);
+}
+
+
+void GUI::toggleSettings()
+{
+  notify("open the menu settings", 5, 3);
 }

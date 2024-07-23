@@ -42,6 +42,10 @@ using namespace std;
 # include "../header/encoder.hpp"
 
 
+/**
+ * @brief Interface of the application
+ * 
+ */
 class GUI : public QWidget
 {
 public:
@@ -92,7 +96,7 @@ private:
     QLabel("File mode is recommended for processing large amounts of data."),
     notificationIcon,
     notificationText;
-  QMenu textBoxMenu;
+  QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
 
   bool inputIsMorse = false, notification = false;
@@ -214,6 +218,12 @@ private:
    * 
    */
    void toggleRadio();
+
+   /**
+    * @brief Open/Close the settings menu
+    * 
+    */
+    void toggleSettings();
 };
 
 
