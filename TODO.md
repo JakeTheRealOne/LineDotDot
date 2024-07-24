@@ -1,4 +1,5 @@
 - Adding settings menu with options [Language | Dark theme | About LineDotDot]
+- Choose to fixed the size or not ?
 
 -> realease 0.1
 

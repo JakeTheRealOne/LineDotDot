@@ -16,3 +16,4 @@ using namespace std;
 
 string APPNAME = "LineDotDot";
 string APPVERSION = "0.1";
+string APPAUTHOR = "JakeTheRealOne";

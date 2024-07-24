@@ -31,7 +31,7 @@ using namespace std;
 # include <QGraphicsDropShadowEffect>
 
 
-extern string APPNAME, APPVERSION;
+extern string APPNAME, APPVERSION, APPAUTHOR;
 
 
 /**
@@ -60,11 +60,11 @@ public:
 private:
   // #### Attributes: ####
 
-  QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION));
+  QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR));
   QPushButton toWebsite = QPushButton("Github page"), closeButton = QPushButton("X");
   QVBoxLayout mainLayout, buttonsLayout;
-  QHBoxLayout versionLayout, nameLayout;
-  QWidget versionBox, nameBox, buttonsBox;
+  QHBoxLayout versionLayout, nameLayout, authorLayout, topBar;
+  QWidget versionBox, nameBox, authorBox, buttonsBox;
   QFont versionFont = appVersion.font(), nameFont = appName.font();
 
 // #### Auxiliary methods: ####

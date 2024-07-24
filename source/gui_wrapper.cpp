@@ -38,18 +38,18 @@ void GuiWrapper::buildLayouts()
   guiWidget.setParent(this);
   mainLayout.addWidget(&guiWidget);
   mainLayout.setSpacing(0);
-  mainLayout.setContentsMargins(10, 10, 10, 10);
+  mainLayout.setContentsMargins(0, 0, 0, 0);
   this->setLayout(&mainLayout);
 }
 
 
 void GuiWrapper::buildShadow()
 {
-  windowShadow->setBlurRadius(10);
-  windowShadow->setXOffset(0);
-  windowShadow->setYOffset(0);
-  windowShadow->setColor(Qt::black);
-  this->setGraphicsEffect(windowShadow);
+  // windowShadow->setBlurRadius(10);
+  // windowShadow->setXOffset(0);
+  // windowShadow->setYOffset(0);
+  // windowShadow->setColor(Qt::black);
+  // this->setGraphicsEffect(windowShadow);
 }
 
 
@@ -58,17 +58,16 @@ void GuiWrapper::buildStyle()
   this->setAttribute(Qt::WA_TranslucentBackground);
   this->setWindowFlags(Qt::FramelessWindowHint);
   this->setAttribute(Qt::WA_NoSystemBackground);
-  this->setAttribute(Qt::WA_OpaquePaintEvent, false);
 }
 
 
 void GuiWrapper::paintEvent(QPaintEvent *)
 {
     if (!isMaximized() and !isFullScreen()) {
-      mainLayout.setContentsMargins(10, 10, 10, 10);
+      // mainLayout.setContentsMargins(1, 1, 1, 1);
       guiWidget.roundedCorners = true;
     } else {
-      mainLayout.setContentsMargins(0, 0, 0, 0);
+      // mainLayout.setContentsMargins(0, 0, 0, 0);
       guiWidget.roundedCorners = false;
     }
     QWidget::paintEvent(nullptr);

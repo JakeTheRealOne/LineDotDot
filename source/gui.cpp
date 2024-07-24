@@ -46,6 +46,7 @@ using namespace std;
 
 GUI::GUI()
 {
+  buildStyle();
   buildButtons();
   buildBars();
   buildLayouts();
@@ -53,7 +54,6 @@ GUI::GUI()
   buildNotification();
   buildAnimations();
   buildTranslateBox();
-  buildStyle();
 };
 
 
@@ -165,7 +165,7 @@ void GUI::buildStyle()
 
   this->setStyleSheet(
     "QWidget {color: #FFFFFF;}"
-    "QToolTip {background-color: #060606; color: #FFFFFF; border: 1px "
+    "QToolTip {background-color: #1E1E1E; color: #FFFFFF; border: 1px "
     "solid #FFFFFF; border-radius: 0.3em; padding: 0.1em;}"
     "QAbstractScrollArea::corner { background: none; border: none;}"
     "QScrollBar {background-color: #2E2E2E;} QScrollBar::handle"
@@ -178,8 +178,8 @@ void GUI::buildStyle()
     "0.8em; border: none;}"
     "QPushButton:hover {background-color: #454545; border: none;}"
     "QPushButton::menu-indicator {image: none; width: 0; height: 0;}"
-    "QMenu"
-    // "QMenu::item {border-radius: 3px; margin: 0.2em; padding: 0.2em; font-size: 16px;}"// background-color: 060606; color: #FFFFFF;}"
+    "QMenu {background-color: #242424;}"
+    "QMenu::item {background-color: #2E2E2E; margin: 0.2em; padding: 0.2em; font-size: 16px;}"
 
     "#warningLabel {color: #FD1D58; font-size: 16px; margin: 0.25em}"
 
@@ -190,16 +190,16 @@ void GUI::buildStyle()
     "#flashButton {border-top-right-radius: 0.7em;}"
 
     "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em;}"
-    "#settingsButton {margin: 0 0.5em 0 0.5em; border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424;}"
+    "#settingsButton {margin: 0 0.5em 0 0.5em; border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #1E1E1E;}"
     "#settingsButton:hover {background-color: #2D2D2D;}"
 
     "#swapButton {margin: 0.25em; border-radius: 0.71em; font-size: 32px;"
     "padding: 0.2em 0.4em;}"
 
-    "#radioButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0;}"
+    "#radioButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #1E1E1E; margin: 0 0.5em 0 0;}"
     "#radioButton:hover {background-color: #2D2D2D;}"
 
-    "#encyclopediaButton {border-radius: 0.35em; padding: 0.3em 0.5em; background-color: #242424; margin: 0 0.5em 0 0; font-size: 14px;}"
+    "#encyclopediaButton {border-radius: 0.35em; padding: 0.4em 0.5em; background-color: #1E1E1E; margin: 0 0.5em 0 0; font-size: 14px;}"
     "#encyclopediaButton:hover {background-color: #2D2D2D;}"
 
     "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
@@ -220,6 +220,7 @@ void GUI::buildStyle()
 
   flashButton.setFixedWidth(bottomButtonSize);
   flashButton.setFixedHeight(bottomButtonSize);
+
 }
 
 
@@ -271,6 +272,12 @@ void GUI::buildMenus()
   settingsMenu.addAction(new QAction("Langage"));
   settingsMenu.addAction(new QAction("Dark theme"));
   settingsMenu.addAction(aboutAction);
+  settingsMenu.setObjectName("settingsMenu");
+  settingsMenu.setStyleSheet(
+    "#settingsMenu {background-color: #242424; border-radius: 3px; color: #FFFFFF;}"
+    "#settingsMenu::item {background-color: #2E2E2E; margin: 0.2em; padding: 0.2em; font-size: 16px;}"
+
+  );
   this->connect(aboutAction, &QAction::triggered, aboutPage, &About::show);
 }
 
@@ -489,9 +496,9 @@ void GUI::paintEvent(QPaintEvent *)
     if (roundedCorners) {
         QPainterPath path;
         path.addRoundedRect(rect(), 12, 12);
-        painter.fillPath(path, QColor(36, 36, 36));
+        painter.fillPath(path, QColor(30, 30, 30));
     } else {
-        painter.fillRect(rect(), QColor(36, 36, 36));
+        painter.fillRect(rect(), QColor(30, 30, 30));
     }
 
     QWidget::paintEvent(nullptr);
