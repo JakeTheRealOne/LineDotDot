@@ -65,7 +65,6 @@ void About::buildStyle()
 
 void About::buildLayouts()
 {
-
   nameLayout.addStretch();
   nameLayout.addWidget(&appName);
   nameLayout.addStretch();
@@ -93,7 +92,7 @@ void About::paintEvent(QPaintEvent *)
 
   if (!isMaximized() and !isFullScreen()) {
     QPainterPath path;
-    path.addRoundedRect(rect(), 15, 15);
+    path.addRoundedRect(rect(), 12, 12);
     painter.fillPath(path, QColor(36, 36, 36));
   } else {
     painter.fillRect(rect(), QColor(36, 36, 36));

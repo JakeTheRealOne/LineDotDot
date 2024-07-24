@@ -100,7 +100,7 @@ private:
     notificationText;
   QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
-  About aboutPage;
+  About* aboutPage = new About;
 
 
   bool inputIsMorse = false, notification = false;

@@ -281,7 +281,7 @@ void GUI::buildMenus()
   settingsMenu.addAction(new QAction("Langage"));
   settingsMenu.addAction(new QAction("Dark theme"));
   settingsMenu.addAction(aboutAction);
-  mainWindow.connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
+  mainWindow.connect(aboutAction, &QAction::triggered, aboutPage, &About::show);
 }
 
 
@@ -498,7 +498,7 @@ void GUI::paintEvent(QPaintEvent *)
 
     if (!isMaximized() and !isFullScreen()) {
         QPainterPath path;
-        path.addRoundedRect(rect(), 15, 15);
+        path.addRoundedRect(rect(), 12, 12);
         painter.fillPath(path, QColor(36, 36, 36));
     } else {
         painter.fillRect(rect(), QColor(36, 36, 36));
