@@ -25,6 +25,7 @@
 # include <QPainterPath>
 # include <QColor>
 # include <QFont>
+# include <QGraphicsDropShadowEffect>
 
 About::About()
 {
@@ -46,6 +47,12 @@ void About::buildChildren()
 
 void About::buildStyle()
 {
+  // QGraphicsDropShadowEffect* windowShadow = new QGraphicsDropShadowEffect;
+  // windowShadow.setBlurRadius(5); // Adjust the blur radius
+  // windowShadow.setXOffset(5);    // Horizontal offset
+  // windowShadow.setOffset(5);    // Vertical offset
+  // windowShadow.setColor(Qt::black); // Shadow color
+
   versionFont.setBold(true);
   versionBox.setFont(versionFont);
 

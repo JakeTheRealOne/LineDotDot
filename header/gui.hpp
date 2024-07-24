@@ -44,6 +44,7 @@ using namespace std;
 # include "../header/encoder.hpp"
 # include "../header/about.hpp"
 
+
 /**
  * @brief Interface of the application
  * 
@@ -78,11 +79,13 @@ public:
    */
   void notify(const QString& content, const char type, const int duration);
 
+  bool roundedCorners = false;
+
 private:
   // #### Attributes: ####
 
-  QWidget mainWindow, bottomBar, topBar, translateTextBox, switchBox, notificationBox;
-  QVBoxLayout tmpLayout, mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
+  QWidget bottomBar, topBar, translateTextBox, switchBox, notificationBox;
+  QVBoxLayout mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
   QHBoxLayout bottomLayout, topLayout, sbLayout, notificationLayout;
   QPushButton closeButton = QPushButton(""),
               encyclopediaButton = QPushButton(""),
@@ -101,8 +104,6 @@ private:
   QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
   About* aboutPage = new About;
-
-
   bool inputIsMorse = false, notification = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
@@ -230,7 +231,6 @@ private:
     void toggleSettings();
 
 protected:
-
   /**
   * @brief Apply rounded corners to the 
   * 

@@ -28,6 +28,7 @@ using namespace std;
 # include <QPainter>
 # include <QPainterPath>
 # include <QFont>
+# include <QGraphicsDropShadowEffect>
 
 
 extern string APPNAME, APPVERSION;

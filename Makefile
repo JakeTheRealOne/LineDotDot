@@ -59,6 +59,7 @@ SOURCES       = asset/app_infos.cpp \
 		source/encoder.cpp \
 		source/about.cpp \
 		source/gui.cpp \
+		source/gui_wrapper.cpp \
 		source/main.cpp 
 OBJECTS       = object/app_infos.o \
 		object/encyclopedia.o \
@@ -67,6 +68,7 @@ OBJECTS       = object/app_infos.o \
 		object/encoder.o \
 		object/about.o \
 		object/gui.o \
+		object/gui_wrapper.o \
 		object/main.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -169,13 +171,15 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		header/decoder.hpp \
 		header/encoder.hpp \
 		header/about.hpp \
-		header/gui.hpp asset/app_infos.cpp \
+		header/gui.hpp \
+		header/gui_wrapper.hpp asset/app_infos.cpp \
 		source/encyclopedia.cpp \
 		source/settings.cpp \
 		source/decoder.cpp \
 		source/encoder.cpp \
 		source/about.cpp \
 		source/gui.cpp \
+		source/gui_wrapper.cpp \
 		source/main.cpp
 QMAKE_TARGET  = LineDotDot
 DESTDIR       = 
@@ -398,8 +402,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/decoder.hpp header/encoder.hpp header/about.hpp header/gui.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents asset/app_infos.cpp source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/about.cpp source/gui.cpp source/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/decoder.hpp header/encoder.hpp header/about.hpp header/gui.hpp header/gui_wrapper.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents asset/app_infos.cpp source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/about.cpp source/gui.cpp source/gui_wrapper.cpp source/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -474,13 +478,24 @@ object/about.o: source/about.cpp header/about.hpp
 object/gui.o: source/gui.cpp header/gui.hpp \
 		header/decoder.hpp \
 		header/settings.hpp \
-		header/encoder.hpp
+		header/encoder.hpp \
+		header/about.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui.o source/gui.cpp
 
-object/main.o: source/main.cpp header/gui.hpp \
+object/gui_wrapper.o: source/gui_wrapper.cpp header/gui_wrapper.hpp \
+		header/gui.hpp \
 		header/decoder.hpp \
 		header/settings.hpp \
-		header/encoder.hpp
+		header/encoder.hpp \
+		header/about.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui_wrapper.o source/gui_wrapper.cpp
+
+object/main.o: source/main.cpp header/gui_wrapper.hpp \
+		header/gui.hpp \
+		header/decoder.hpp \
+		header/settings.hpp \
+		header/encoder.hpp \
+		header/about.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/main.o source/main.cpp
 
 ####### Install

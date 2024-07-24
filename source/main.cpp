@@ -14,12 +14,14 @@
 # include <QApplication>
 
 // #### Internal inclusions: ####
-# include "../header/gui.hpp"
+# include "../header/gui_wrapper.hpp"
+
 
 int main(int argc, char *argv[]) 
 {
   QApplication app(argc, argv);
-  GUI window;
+  GuiWrapper window;
+
   window.show();
   int code = app.exec();
   return code;
