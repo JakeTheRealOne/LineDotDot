@@ -12,3 +12,27 @@
 
 // #### Internal inclusions: ####
 # include "../header/fromfile.hpp"
+# include "../header/settings.hpp"
+# include "../header/decoder.hpp"
+# include "../header/encoder.hpp"
+
+// #### Std inclusions: ####
+# include <string>
+# include <vector>
+using namespace std;
+
+
+string Decoder::convert(const string& path, const ConversionSettings& settings)
+{
+  // read the file content
+
+  // convert the text content into morse
+}
+
+
+string Encoder::convert(const string& path, const ConversionSettings& settings)
+{
+  // read the file content
+
+  // convert the morse content into text
+}

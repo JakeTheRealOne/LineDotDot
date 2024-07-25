@@ -52,6 +52,8 @@ void About::buildChildren()
 
 void About::buildStyle()
 {
+  this->resize(200, 300);
+  this->setFixedSize(200, 300);
   // QGraphicsDropShadowEffect* windowShadow = new QGraphicsDropShadowEffect;
   // windowShadow.setBlurRadius(5); // Adjust the blur radius
   // windowShadow.setXOffset(5);    // Horizontal offset

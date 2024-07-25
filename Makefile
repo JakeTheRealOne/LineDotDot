@@ -57,18 +57,20 @@ SOURCES       = asset/app_infos.cpp \
 		source/settings.cpp \
 		source/decoder.cpp \
 		source/encoder.cpp \
+		source/fromfile.cpp \
 		source/about.cpp \
 		source/gui.cpp \
-		source/gui_wrapper.cpp \
+		source/settings_menu.cpp \
 		source/main.cpp 
 OBJECTS       = object/app_infos.o \
 		object/encyclopedia.o \
 		object/settings.o \
 		object/decoder.o \
 		object/encoder.o \
+		object/fromfile.o \
 		object/about.o \
 		object/gui.o \
-		object/gui_wrapper.o \
+		object/settings_menu.o \
 		object/main.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -170,16 +172,18 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		header/settings.hpp \
 		header/decoder.hpp \
 		header/encoder.hpp \
+		header/fromfile.hpp \
 		header/about.hpp \
 		header/gui.hpp \
-		header/gui_wrapper.hpp asset/app_infos.cpp \
+		header/settings_menu.hpp asset/app_infos.cpp \
 		source/encyclopedia.cpp \
 		source/settings.cpp \
 		source/decoder.cpp \
 		source/encoder.cpp \
+		source/fromfile.cpp \
 		source/about.cpp \
 		source/gui.cpp \
-		source/gui_wrapper.cpp \
+		source/settings_menu.cpp \
 		source/main.cpp
 QMAKE_TARGET  = LineDotDot
 DESTDIR       = 
@@ -402,8 +406,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/decoder.hpp header/encoder.hpp header/about.hpp header/gui.hpp header/gui_wrapper.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents asset/app_infos.cpp source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/about.cpp source/gui.cpp source/gui_wrapper.cpp source/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents header/encyclopedia.hpp header/settings.hpp header/decoder.hpp header/encoder.hpp header/fromfile.hpp header/about.hpp header/gui.hpp header/settings_menu.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents asset/app_infos.cpp source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/fromfile.cpp source/about.cpp source/gui.cpp source/settings_menu.cpp source/main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -472,6 +476,12 @@ object/encoder.o: source/encoder.cpp header/encoder.hpp \
 		header/encyclopedia.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/encoder.o source/encoder.cpp
 
+object/fromfile.o: source/fromfile.cpp header/fromfile.hpp \
+		header/settings.hpp \
+		header/decoder.hpp \
+		header/encoder.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/fromfile.o source/fromfile.cpp
+
 object/about.o: source/about.cpp header/about.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/about.o source/about.cpp
 
@@ -479,23 +489,19 @@ object/gui.o: source/gui.cpp header/gui.hpp \
 		header/decoder.hpp \
 		header/settings.hpp \
 		header/encoder.hpp \
-		header/about.hpp
+		header/about.hpp \
+		header/settings_menu.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui.o source/gui.cpp
 
-object/gui_wrapper.o: source/gui_wrapper.cpp header/gui_wrapper.hpp \
-		header/gui.hpp \
-		header/decoder.hpp \
-		header/settings.hpp \
-		header/encoder.hpp \
-		header/about.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/gui_wrapper.o source/gui_wrapper.cpp
+object/settings_menu.o: source/settings_menu.cpp header/settings_menu.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/settings_menu.o source/settings_menu.cpp
 
-object/main.o: source/main.cpp header/gui_wrapper.hpp \
-		header/gui.hpp \
+object/main.o: source/main.cpp header/gui.hpp \
 		header/decoder.hpp \
 		header/settings.hpp \
 		header/encoder.hpp \
-		header/about.hpp
+		header/about.hpp \
+		header/settings_menu.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o object/main.o source/main.cpp
 
 ####### Install

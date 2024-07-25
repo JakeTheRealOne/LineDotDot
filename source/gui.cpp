@@ -42,6 +42,7 @@ using namespace std;
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
 # include "../header/about.hpp"
+# include "../header/settings_menu.hpp"
 
 
 GUI::GUI()
@@ -160,6 +161,7 @@ void GUI::buildStyle()
 {
   this->setMinimumSize(400, 400);
   this->setWindowTitle("LineDotDot");
+  this->setObjectName("mainWindow");
   this->setAttribute(Qt::WA_TranslucentBackground);
   this->setWindowFlags(Qt::FramelessWindowHint);
 
@@ -172,7 +174,7 @@ void GUI::buildStyle()
     "{background-color: #202020; border: none; border-radius: 5px; margin: 0.1em; width: 1em;}"
     "QScrollBar::up-arrow, QScrollBar::down-arrow {border: none; width: 0; height: 0; background: none;}"
     "QScrollBar::sub-line, QScrollBar::add-line { border: none; background: none; height: 0px; subcontrol-origin: margin;}"
-    "QTextEdit {font-size: 24px; background-color: #2E2E2E; margin: 0"
+    "QTextEdit {font-size: 20px; background-color: #2E2E2E; margin: 0"
     "0.5em; border-radius: 0.35em; padding: 0.5em 0.25em 0.25em 0.5em;}"
     "QPushButton {font-size: 16px; background-color: #2E2E2E; padding: "
     "0.8em; border: none;}"
@@ -276,7 +278,7 @@ void GUI::buildMenus()
   settingsMenu.setStyleSheet(
     "#settingsMenu {background-color: #242424; border-radius: 3px; color: #FFFFFF;}"
     "#settingsMenu::item {background-color: #2E2E2E; margin: 0.2em; padding: 0.2em; font-size: 16px;}"
-
+    "#settingsMenu::item:first {background-color: red;}"
   );
   this->connect(aboutAction, &QAction::triggered, aboutPage, &About::show);
 }
@@ -327,7 +329,7 @@ void GUI::notify(const QString& content, const char type, const int duration)
 void GUI::notifyHelper(const QString& content, const char type, const int duration)
 {
   // init the notification box
-  QThread::msleep(250);
+  QThread::msleep(250); //< sleep to prevent style artifacts all around the GUI (Qt bugs)
   if (content.size() > 64)
   {
     cout << "[ERR] cannot display notification with 64 or more characters" << endl;
@@ -478,7 +480,8 @@ void GUI::toggleKnowledgeBook()
 
 void GUI::toggleRadio()
 {
-  notify("not yet implemented", 1, 3);
+  settingsMMenu->show();
+  // notify("not yet implemented", 1, 3);
 }
 
 
@@ -492,8 +495,9 @@ void GUI::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-    if (roundedCorners) {
+    if (!isMaximized() and !isFullScreen()) {
         QPainterPath path;
         path.addRoundedRect(rect(), 12, 12);
         painter.fillPath(path, QColor(30, 30, 30));

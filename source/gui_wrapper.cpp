@@ -45,11 +45,11 @@ void GuiWrapper::buildLayouts()
 
 void GuiWrapper::buildShadow()
 {
-  // windowShadow->setBlurRadius(10);
-  // windowShadow->setXOffset(0);
-  // windowShadow->setYOffset(0);
-  // windowShadow->setColor(Qt::black);
-  // this->setGraphicsEffect(windowShadow);
+  windowShadow->setBlurRadius(10);
+  windowShadow->setXOffset(0);
+  windowShadow->setYOffset(0);
+  windowShadow->setColor(Qt::black);
+  this->setGraphicsEffect(windowShadow);
 }
 
 
@@ -64,10 +64,10 @@ void GuiWrapper::buildStyle()
 void GuiWrapper::paintEvent(QPaintEvent *)
 {
     if (!isMaximized() and !isFullScreen()) {
-      // mainLayout.setContentsMargins(1, 1, 1, 1);
+      mainLayout.setContentsMargins(5, 5, 5, 5);
       guiWidget.roundedCorners = true;
     } else {
-      // mainLayout.setContentsMargins(0, 0, 0, 0);
+      mainLayout.setContentsMargins(0, 0, 0, 0);
       guiWidget.roundedCorners = false;
     }
     QWidget::paintEvent(nullptr);

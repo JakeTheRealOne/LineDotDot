@@ -43,6 +43,7 @@ using namespace std;
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
 # include "../header/about.hpp"
+# include "../header/settings_menu.hpp"
 
 
 /**
@@ -104,6 +105,7 @@ private:
   QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
   About* aboutPage = new About;
+  SettingsMenu* settingsMMenu = new SettingsMenu;
   bool inputIsMorse = false, notification = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
