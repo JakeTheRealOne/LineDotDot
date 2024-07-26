@@ -15,7 +15,7 @@
 using namespace std;
 
 string APPNAME = "LineDotDot";
-string APPVERSION = "0.1";
+string APPVERSION = "0.2";
 string APPAUTHOR = "JakeTheRealOne";
 string APPLICENSE = 
 "                    GNU GENERAL PUBLIC LICENSE\n"
