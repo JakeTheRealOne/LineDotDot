@@ -62,7 +62,7 @@ private:
 
   QWidget mainBox, versionBox, nameBox, authorBox, buttonsBox;
   QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR));
-  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("Wiki page"),closeButton = QPushButton("X");
+  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("I want to learn more"),closeButton = QPushButton("X");
   QVBoxLayout mainLayout, buttonsLayout;
   QHBoxLayout versionLayout, nameLayout, authorLayout, topBar, voidLayout;
   QFont versionFont = appVersion.font(), nameFont = appName.font();
