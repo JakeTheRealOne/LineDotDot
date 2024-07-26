@@ -49,6 +49,11 @@ void About::buildChildren()
   appAuthor.setParent(&authorBox);
   mainBox.setObjectName("mainBox");
 
+  closeButton.setObjectName("closeButton");
+  closeButton.setObjectName("closeButton");
+  this->connect(&closeButton, &QPushButton::clicked, this,
+                &QWidget::hide);
+
   toGithub.setObjectName("toGithub");
   this->connect(&toGithub, &QPushButton::clicked, [&]() {
       QUrl url("https://github.com/JakeTheRealOne/LineDotDot");
@@ -65,8 +70,8 @@ void About::buildChildren()
 
 void About::buildStyle()
 {
-  this->resize(217, 245);
-  this->setFixedSize(217, 245);
+  this->resize(217, 290);
+  this->setFixedSize(217, 290);
 
   windowShadow.setBlurRadius(10);
   windowShadow.setXOffset(0);
@@ -83,6 +88,8 @@ void About::buildStyle()
     "#appAuthor {font-size: 15px;}"
     "#appName {font-size: 24px; margin-top: 0.75em; padding: 0; font-weight: bold;}"
     "#mainBox {border-radius: 12px; background-color: #242424; padding: 0.5em;}"
+    "#closeButton {border-radius: 0.71em; padding: 0.25em 0.4em; font-size: 16px; background-color: #2E2E2E;}"
+    "#closeButton:hover {background-color: #454545;}"
   );
 
   this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -98,6 +105,11 @@ void About::buildLayouts()
   mainLayout.setContentsMargins(0, 0, 0, 0);
   voidLayout.setContentsMargins(0, 0, 0, 0);
   buttonsLayout.setContentsMargins(0, 0, 0, 0);
+  topLayout.setContentsMargins(0, 0, 0, 0);
+
+  topLayout.addStretch();
+  topLayout.addWidget(&closeButton);
+  topBar.setLayout(&topLayout);
 
   buttonsLayout.addWidget(&toGithub);
   buttonsLayout.addWidget(&toWiki);
@@ -118,10 +130,13 @@ void About::buildLayouts()
   versionLayout.addStretch();
   versionBox.setLayout(&versionLayout);
 
+  mainLayout.addWidget(&topBar);
+  mainLayout.addStretch();
   mainLayout.addWidget(&nameBox);
   mainLayout.addWidget(&authorBox);
   mainLayout.addWidget(&versionBox);
   mainLayout.addWidget(&buttonsBox);
+  mainLayout.addStretch();
   mainBox.setLayout(&mainLayout);
   mainLayout.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
   appName.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
@@ -131,9 +146,12 @@ void About::buildLayouts()
   this->setLayout(&voidLayout);
 }
 
+# include <iostream>
+using namespace std;
 
 void About::resizeEvent(QResizeEvent* event)
 {
+  cout << this->width() << " & " << this->height() << endl;
   if (isMaximized() or isFullScreen()){
     mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
     voidLayout.setContentsMargins(0, 0, 0, 0);

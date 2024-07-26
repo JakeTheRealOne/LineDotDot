@@ -60,11 +60,11 @@ public:
 private:
   // #### Attributes: ####
 
-  QWidget mainBox, versionBox, nameBox, authorBox, buttonsBox;
+  QWidget mainBox, versionBox, nameBox, authorBox, buttonsBox, topBar;
   QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR));
-  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("I want to learn more"),closeButton = QPushButton("X");
+  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("I want to learn more"), closeButton = QPushButton("");
   QVBoxLayout mainLayout, buttonsLayout;
-  QHBoxLayout versionLayout, nameLayout, authorLayout, topBar, voidLayout;
+  QHBoxLayout versionLayout, nameLayout, authorLayout, topLayout, voidLayout;
   QFont versionFont = appVersion.font(), nameFont = appName.font();
   QGraphicsDropShadowEffect windowShadow;
 

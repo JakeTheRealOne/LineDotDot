@@ -49,7 +49,6 @@ void SettingsMenu::buildLayouts()
   mainLayout.addWidget(&aboutButton);
   mainBox.setLayout(&mainLayout);
   mainBox.setObjectName("mainBox");
-
   voidLayout.addWidget(&mainBox);
   this->setLayout(&voidLayout);
 }
