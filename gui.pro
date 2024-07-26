@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = LineDotDot
+TARGET = LineDotDot-linux
 INCLUDEPATH += .
 QT += widgets core gui
 SOURCES += asset/app_infos.cpp source/encyclopedia.cpp source/settings.cpp source/decoder.cpp source/encoder.cpp source/fromfile.cpp source/about.cpp source/gui.cpp source/settings_menu.cpp source/main.cpp
