@@ -146,12 +146,9 @@ void About::buildLayouts()
   this->setLayout(&voidLayout);
 }
 
-# include <iostream>
-using namespace std;
 
 void About::resizeEvent(QResizeEvent* event)
 {
-  cout << this->width() << " & " << this->height() << endl;
   if (isMaximized() or isFullScreen()){
     mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
     voidLayout.setContentsMargins(0, 0, 0, 0);

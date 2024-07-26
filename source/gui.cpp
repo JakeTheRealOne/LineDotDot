@@ -133,6 +133,8 @@ void GUI::buildLayouts()
 
 void GUI::buildButtons()
 {
+  this->connect(this, &QWidget::destroyed, this, &QApplication::quit);
+
   closeButton.setObjectName("closeButton");
   this->connect(&closeButton, &QPushButton::clicked, this,
                 &QApplication::quit);
