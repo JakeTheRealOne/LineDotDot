@@ -42,7 +42,7 @@ void SettingsMenu::buildLayouts()
 {
   mainLayout.addWidget(&languageButton);
   mainLayout.addWidget(&aboutButton);
-  // mainLayout.setContentsMargins(0, 0, 0, 0);
+  // mainLayout.setContentsMargins(2, 2, 2, 2);
   mainBox.setLayout(&mainLayout);
   mainBox.setObjectName("mainBox");
 
@@ -53,11 +53,11 @@ void SettingsMenu::buildLayouts()
 
 void SettingsMenu::buildStyle()
 {
-    this->resize(100, 100);
-    this->setFixedSize(100, 100);
+    this->resize(150, 150);
+    this->setFixedSize(150, 150);
     this->setAttribute(Qt::WA_TranslucentBackground);
     this->setStyleSheet(
-      "QWidget {background-color: green;}"
+      "QWidget {background-color: green; font-size: 12px;}"
       "#mainBox {border-radius: 5px; background-color: blue;}"
       "QPushButton {background-color: red;}"
     );

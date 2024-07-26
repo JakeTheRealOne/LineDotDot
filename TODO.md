@@ -15,3 +15,4 @@
     - Emergency band (warning)
     - Other bands
     - Msg protocol for identificication
+- Remember to declare parents before children

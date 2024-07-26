@@ -32,9 +32,9 @@ using namespace std;
 
 About::About()
 {
-  buildStyle();
   buildChildren();
   buildLayouts();
+  buildStyle();
 }
 
 
@@ -47,6 +47,7 @@ void About::buildChildren()
   appVersion.setParent(&versionBox);
   appAuthor.setObjectName("appAuthor");
   appAuthor.setParent(&authorBox);
+  mainBox.setObjectName("mainBox");
 }
 
 
@@ -60,22 +61,19 @@ void About::buildStyle()
   // windowShadow.setOffset(5);    // Vertical offset
   // windowShadow.setColor(Qt::black); // Shadow color
 
-  versionFont.setBold(true);
-  versionBox.setFont(versionFont);
-
-  nameFont.setBold(true);
-  nameBox.setFont(nameFont);
-
-  this->setWindowFlags(Qt::FramelessWindowHint);
-  this->setAttribute(Qt::WA_TranslucentBackground);
   this->setStyleSheet(
     "QWidget {color: #FFFFFF; padding: 0.25em; margin: 0em; font-size: 18px; border-radius: 3px;}"
     "QPushButton {background-color: #353535; font-size: 18px; border-radius: 0.35em;}"
     "QPushButton:hover {background-color: #3B3B3B;}"
-    "#appVersion {font-size: 15px; border-radius: 0.71em; color: #73A5E1; background-color: #2C3138; padding: 0.25em 1em; margin-bottom: 1em;}"
+    "#appVersion {font-size: 15px; border-radius: 0.71em; color: #73A5E1; background-color: #2C3138; padding: 0.25em 1em; margin-bottom: 1em;  font-weight: bold;}"
     "#appAuthor {font-size: 15px;}"
-    "#appName {font-size: 24px; margin-top: 0.75em; padding: 0;}"
+    "#appName {font-size: 24px; margin-top: 0.75em; padding: 0; font-weight: bold;}"
+    "#mainBox {border-radius: 12px; background-color: #242424;}"
   );
+
+  this->setWindowFlags(Qt::FramelessWindowHint);
+  this->setAttribute(Qt::WA_TranslucentBackground);
+
 }
 
 
@@ -85,6 +83,7 @@ void About::buildLayouts()
   authorLayout.setContentsMargins(0, 0, 0, 0);
   versionLayout.setContentsMargins(0, 0, 0, 0);
   mainLayout.setContentsMargins(0, 0, 0, 0);
+  voidLayout.setContentsMargins(0, 0, 0, 0);
 
   nameLayout.addStretch();
   nameLayout.addWidget(&appName);
@@ -105,24 +104,22 @@ void About::buildLayouts()
   mainLayout.addWidget(&authorBox);
   mainLayout.addWidget(&versionBox);
   // mainLayout.addWidget(&);
-  this->setLayout(&mainLayout);
+  mainBox.setLayout(&mainLayout);
   mainLayout.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
   appName.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
   appVersion.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
 
+  voidLayout.addWidget(&mainBox);
+  this->setLayout(&voidLayout);
+
 }
 
-void About::paintEvent(QPaintEvent *)
-{
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  if (!isMaximized() and !isFullScreen()) {
-    QPainterPath path;
-    path.addRoundedRect(rect(), 12, 12);
-    painter.fillPath(path, QColor(36, 36, 36));
-  } else {
-    painter.fillRect(rect(), QColor(36, 36, 36));
-  }
 
-  QWidget::paintEvent(nullptr);
+void About::resizeEvent(QResizeEvent* event)
+{
+  if (isMaximized() or isFullScreen()){
+    mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
+  } else {
+    mainBox.setStyleSheet("#mainBox {border-radius: 10px;}");
+  }
 }

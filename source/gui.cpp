@@ -69,6 +69,10 @@ void GUI::buildBars()
   fileButton.setParent(&bottomBar);
   materialButton.setParent(&bottomBar);
   flashButton.setParent(&bottomBar);
+
+  // bottomBar.setParent(&mainBox);
+  // translateTextBox.setParent(&mainBox);
+  // topBar.setParent(&mainBox);
 }
 
 
@@ -111,12 +115,18 @@ void GUI::buildLayouts()
   notificationLayout.setContentsMargins(0, 0, 0, 0);
   notificationLayout.setAlignment(Qt::AlignHCenter | Qt::AlignCenter);
   notificationBox.setLayout(&notificationLayout);
+  
   mainLayout.addWidget(&topBar);
   mainLayout.addWidget(&translateTextBox);
   mainLayout.addWidget(&bottomBar);
   mainLayout.setSpacing(0);
   mainLayout.setContentsMargins(0, 0, 0, 0);
-  this->setLayout(&mainLayout);
+  mainBox.setLayout(&mainLayout);
+
+  voidLayout.addWidget(&mainBox);
+  voidLayout.setContentsMargins(0, 0, 0, 0);
+  mainBox.setObjectName("mainBox");
+  this->setLayout(&voidLayout);
 }
 
 
@@ -207,6 +217,8 @@ void GUI::buildStyle()
     "#notificationBox {border-radius: 0.35em; padding: 0.5em; background-color: #181818;}"
     "#notificationText {padding: 0em; background-color: #181818; margin-right: 0.25em;}"
     "#notificationIcon {padding: 0em; background-color: #181818; margin-left: 0.25em; color: #FFFFFF; font-size: 16px;}"
+
+    "#mainBox {border-radius: 12px; background-color: #1E1E1E;}"
   );
 
   int bottomButtonSize = 55;
@@ -280,7 +292,7 @@ void GUI::buildMenus()
     "#settingsMenu::item {background-color: #2E2E2E; margin: 0.2em; padding: 0.2em; font-size: 16px;}"
     "#settingsMenu::item:first {background-color: red;}"
   );
-  this->connect(aboutAction, &QAction::triggered, aboutPage, &About::show);
+  this->connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
 }
 
 
@@ -480,7 +492,7 @@ void GUI::toggleKnowledgeBook()
 
 void GUI::toggleRadio()
 {
-  settingsMMenu->show();
+  settingsMMenu.show();
   // notify("not yet implemented", 1, 3);
 }
 
@@ -491,19 +503,11 @@ void GUI::toggleSettings()
 }
 
 
-void GUI::paintEvent(QPaintEvent *)
+void GUI::resizeEvent(QResizeEvent* event)
 {
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-
-    if (!isMaximized() and !isFullScreen()) {
-        QPainterPath path;
-        path.addRoundedRect(rect(), 12, 12);
-        painter.fillPath(path, QColor(30, 30, 30));
-    } else {
-        painter.fillRect(rect(), QColor(30, 30, 30));
-    }
-
-    QWidget::paintEvent(nullptr);
+  if (isMaximized() or isFullScreen()){
+    mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
+  } else {
+    mainBox.setStyleSheet("#mainBox {border-radius: 10px;}");
+  }
 }

@@ -85,9 +85,9 @@ public:
 private:
   // #### Attributes: ####
 
-  QWidget bottomBar, topBar, translateTextBox, switchBox, notificationBox;
-  QVBoxLayout mainLayout, translateTextLayout; //tmpLayout = QVBoxLayout(this);
-  QHBoxLayout bottomLayout, topLayout, sbLayout, notificationLayout;
+  QWidget mainBox, bottomBar, topBar, translateTextBox, switchBox, notificationBox;
+  QVBoxLayout mainLayout, translateTextLayout;
+  QHBoxLayout bottomLayout, topLayout, sbLayout, notificationLayout, voidLayout;
   QPushButton closeButton = QPushButton(""),
               encyclopediaButton = QPushButton(""),
               radioButton = QPushButton("󰜟"),
@@ -104,8 +104,8 @@ private:
     notificationText;
   QMenu textBoxMenu, settingsMenu;
   QThread* notificationThread;
-  About* aboutPage = new About;
-  SettingsMenu* settingsMMenu = new SettingsMenu;
+  About aboutPage;
+  SettingsMenu settingsMMenu;
   bool inputIsMorse = false, notification = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode
@@ -233,11 +233,12 @@ private:
     void toggleSettings();
 
 protected:
-  /**
-  * @brief Apply rounded corners to the 
-  * 
-  */
-  void paintEvent(QPaintEvent *);
+    /**
+     * @brief Apply rounded corners
+     * 
+     * @param event 
+     */
+    void resizeEvent(QResizeEvent* event);
 };
 
 

@@ -60,11 +60,11 @@ public:
 private:
   // #### Attributes: ####
 
+  QWidget mainBox, versionBox, nameBox, authorBox, buttonsBox;
   QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR));
   QPushButton toWebsite = QPushButton("Github page"), closeButton = QPushButton("X");
   QVBoxLayout mainLayout, buttonsLayout;
-  QHBoxLayout versionLayout, nameLayout, authorLayout, topBar;
-  QWidget versionBox, nameBox, authorBox, buttonsBox;
+  QHBoxLayout versionLayout, nameLayout, authorLayout, topBar, voidLayout;
   QFont versionFont = appVersion.font(), nameFont = appName.font();
 
 // #### Auxiliary methods: ####
@@ -88,12 +88,12 @@ private:
   void buildStyle();
 
 protected:
-
   /**
-   * @brief Apply rounded corners
-   * 
-   */
-  void paintEvent(QPaintEvent *);
+    * @brief Apply rounded corners
+    * 
+    * @param event 
+    */
+  void resizeEvent(QResizeEvent* event);
 };
 
 
