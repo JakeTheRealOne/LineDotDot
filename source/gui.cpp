@@ -30,6 +30,8 @@
 # include <QPainter>
 # include <QPainterPath>
 # include <QColor>
+# include <QGraphicsDropShadowEffect>
+# include <QPoint>
 
 
 // #### Std inclusions: ####
@@ -41,7 +43,6 @@ using namespace std;
 # include "../header/gui.hpp"
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
-# include "../header/about.hpp"
 # include "../header/settings_menu.hpp"
 
 
@@ -147,7 +148,8 @@ void GUI::buildButtons()
                 &GUI::toggleRadio);
 
   settingsButton.setObjectName("settingsButton");
-  settingsButton.setMenu(&settingsMenu);
+  this->connect(&settingsButton, &QPushButton::clicked, this,
+                &GUI::toggleSettings);
 
   textButton.setObjectName("textButton");
   this->connect(&textButton, &QPushButton::clicked, this,
@@ -174,6 +176,12 @@ void GUI::buildStyle()
   this->setObjectName("mainWindow");
   this->setAttribute(Qt::WA_TranslucentBackground);
   this->setWindowFlags(Qt::FramelessWindowHint);
+
+  windowShadow.setBlurRadius(10);
+  windowShadow.setXOffset(0);
+  windowShadow.setYOffset(0);
+  windowShadow.setColor(Qt::black);
+  this->setGraphicsEffect(&windowShadow);
 
   this->setStyleSheet(
     "QWidget {color: #FFFFFF;}"
@@ -234,7 +242,6 @@ void GUI::buildStyle()
 
   flashButton.setFixedWidth(bottomButtonSize);
   flashButton.setFixedHeight(bottomButtonSize);
-
 }
 
 
@@ -282,17 +289,7 @@ void GUI::buildNotification()
 
 void GUI::buildMenus()
 {
-  QAction* aboutAction = new QAction("About LineDotDot");
-  settingsMenu.addAction(new QAction("Langage"));
-  settingsMenu.addAction(new QAction("Dark theme"));
-  settingsMenu.addAction(aboutAction);
-  settingsMenu.setObjectName("settingsMenu");
-  settingsMenu.setStyleSheet(
-    "#settingsMenu {background-color: #242424; border-radius: 3px; color: #FFFFFF;}"
-    "#settingsMenu::item {background-color: #2E2E2E; margin: 0.2em; padding: 0.2em; font-size: 16px;}"
-    "#settingsMenu::item:first {background-color: red;}"
-  );
-  this->connect(aboutAction, &QAction::triggered, &aboutPage, &About::show);
+
 }
 
 
@@ -331,7 +328,7 @@ void GUI::notify(const QString& content, const char type, const int duration)
   }
   notificationThread = QThread::create([this, content, type, duration]() {
         this->notifyHelper(content, type, duration);
-    });
+  });
   notificationThread->start();
   notificationThread->setPriority(QThread::LowestPriority);
   this->connect(notificationThread, &QThread::finished, notificationThread, &QObject::deleteLater);
@@ -492,14 +489,17 @@ void GUI::toggleKnowledgeBook()
 
 void GUI::toggleRadio()
 {
-  settingsMMenu.show();
-  // notify("not yet implemented", 1, 3);
+  notify("not yet implemented", 1, 3);
 }
 
 
 void GUI::toggleSettings()
 {
-  notify("open the menu settings", 5, 3);
+  QPoint globalPos = this->mapToGlobal(this->rect().center());
+  int x = globalPos.x() - settingsMenu.width()/2;
+  int y = globalPos.y() - settingsMenu.height()/2;
+  settingsMenu.move(x, y);
+  settingsMenu.toggle();
 }
 
 
@@ -507,7 +507,9 @@ void GUI::resizeEvent(QResizeEvent* event)
 {
   if (isMaximized() or isFullScreen()){
     mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
+    voidLayout.setContentsMargins(0, 0, 0, 0);
   } else {
     mainBox.setStyleSheet("#mainBox {border-radius: 10px;}");
+    voidLayout.setContentsMargins(5, 5, 5, 5);
   }
 }

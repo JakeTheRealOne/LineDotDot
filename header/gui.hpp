@@ -31,8 +31,7 @@
 # include <QMenu>
 # include <QAction>
 # include <QThread>
-# include <QPainter>
-# include <QPainterPath>
+# include <QGraphicsDropShadowEffect>
 
 // #### Std inclusions: ####
 # include <iostream>
@@ -42,7 +41,6 @@ using namespace std;
 // #### Intern inclusions: ####
 # include "../header/decoder.hpp"
 # include "../header/encoder.hpp"
-# include "../header/about.hpp"
 # include "../header/settings_menu.hpp"
 
 
@@ -102,10 +100,10 @@ private:
     QLabel("File mode is recommended for processing large amounts of data."),
     notificationIcon,
     notificationText;
-  QMenu textBoxMenu, settingsMenu;
+  QMenu textBoxMenu;
+  QGraphicsDropShadowEffect windowShadow;
   QThread* notificationThread;
-  About aboutPage;
-  SettingsMenu settingsMMenu;
+  SettingsMenu settingsMenu = SettingsMenu(this);
   bool inputIsMorse = false, notification = false;
   char currentMode =
     -1; //< 0: text mode, 1: file mode, 2: material mode, 3: flash mode

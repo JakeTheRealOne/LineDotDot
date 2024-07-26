@@ -22,6 +22,10 @@
 # include <QResizeEvent>
 # include <QLabel>
 # include <QCheckBox>
+# include <QGraphicsDropShadowEffect>
+
+// #### Internal inclusions: ####
+# include "../header/about.hpp"
 
 
 /**
@@ -37,9 +41,29 @@ public:
    * @brief Construct a new Settings Menu object
    * 
    */
-  SettingsMenu();
+  SettingsMenu(QWidget* parent);
 
+  // #### Destructor: ####
+
+  /**
+   * @brief Destroy the Settings Menu object
+   * 
+   */
   ~SettingsMenu() = default;
+
+  // #### Methods: ####
+
+  /**
+   * @brief Toggle the menu visibility
+   *
+   */
+  void toggle();
+
+  /**
+   * @brief Show to about page of the app
+   * 
+   */
+  void showAboutPage();
 
 private:
   // #### Attributes: ####
@@ -49,6 +73,8 @@ private:
   QPushButton aboutButton = QPushButton("About LineDotDot"), languageButton = QPushButton("Language");
   QLabel darkLabel = QLabel("Dark mode");
   QCheckBox darkCheckBox;
+  QGraphicsDropShadowEffect windowShadow;
+  About aboutPage;
 
   // #### Auxiliary methods: ####
 

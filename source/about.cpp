@@ -55,11 +55,12 @@ void About::buildStyle()
 {
   this->resize(200, 300);
   this->setFixedSize(200, 300);
-  // QGraphicsDropShadowEffect* windowShadow = new QGraphicsDropShadowEffect;
-  // windowShadow.setBlurRadius(5); // Adjust the blur radius
-  // windowShadow.setXOffset(5);    // Horizontal offset
-  // windowShadow.setOffset(5);    // Vertical offset
-  // windowShadow.setColor(Qt::black); // Shadow color
+
+  windowShadow.setBlurRadius(10);
+  windowShadow.setXOffset(0);
+  windowShadow.setYOffset(0);
+  windowShadow.setColor(Qt::black);
+  this->setGraphicsEffect(&windowShadow);
 
   this->setStyleSheet(
     "QWidget {color: #FFFFFF; padding: 0.25em; margin: 0em; font-size: 18px; border-radius: 3px;}"
@@ -71,7 +72,7 @@ void About::buildStyle()
     "#mainBox {border-radius: 12px; background-color: #242424;}"
   );
 
-  this->setWindowFlags(Qt::FramelessWindowHint);
+  this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
   this->setAttribute(Qt::WA_TranslucentBackground);
 
 }
@@ -119,7 +120,9 @@ void About::resizeEvent(QResizeEvent* event)
 {
   if (isMaximized() or isFullScreen()){
     mainBox.setStyleSheet("#mainBox {border-radius: 0;}");
+    voidLayout.setContentsMargins(0, 0, 0, 0);
   } else {
     mainBox.setStyleSheet("#mainBox {border-radius: 10px;}");
+    voidLayout.setContentsMargins(5, 5, 5, 5);
   }
 }

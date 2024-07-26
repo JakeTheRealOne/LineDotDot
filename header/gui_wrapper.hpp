@@ -43,6 +43,14 @@ public:
    */
   GuiWrapper();
 
+  // #### Destructor: ####
+
+  /**
+   * @brief Destroy the Gui Wrapper object
+   * 
+   */
+  ~GuiWrapper() = default;
+
 private:
   // #### Attributes: ####
   GUI guiWidget;
