@@ -29,9 +29,10 @@ using namespace std;
 # include <QPainterPath>
 # include <QFont>
 # include <QGraphicsDropShadowEffect>
+# include <QTextEdit>
 
 
-extern string APPNAME, APPVERSION, APPAUTHOR;
+extern string APPNAME, APPVERSION, APPAUTHOR, APPLICENSE;
 
 
 /**
@@ -49,22 +50,29 @@ public:
   */
   About();
 
-  // #### Destructor: ####
+  // #### Button actions: ####
 
   /**
-  * @brief Destroy the About object
-  * 
-  */
-  //~About() = default; // Removing because it leads to a Stack smashing
+   * @brief Show the legal informations
+   * 
+   */
+  void showLegal();
+
+  /**
+   * @brief Hide the legal informations
+   * 
+   */
+  void hideLegal();
 
 private:
   // #### Attributes: ####
 
-  QWidget mainBox, versionBox, nameBox, authorBox, buttonsBox, topBar;
-  QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR));
-  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("I want to learn more"), closeButton = QPushButton("");
-  QVBoxLayout mainLayout, buttonsLayout;
-  QHBoxLayout versionLayout, nameLayout, authorLayout, topLayout, voidLayout;
+  QWidget mainBox, aboutBox, versionBox, nameBox, authorBox, buttonsBox, topBar, legalBox;
+  QLabel appName = QLabel(QString::fromStdString(APPNAME)), appVersion = QLabel(QString::fromStdString(APPVERSION)), appAuthor = QLabel(QString::fromStdString(APPAUTHOR)), legalTitle = QLabel("Legal"), legalSubtitle = QLabel("This software follows the GPL3.0 license");
+  QTextEdit legalText = QTextEdit(QString::fromStdString(APPLICENSE));
+  QPushButton toGithub = QPushButton("Github page"), toWiki = QPushButton("Morse infos"), legalButton = QPushButton("Legal"), closeButton = QPushButton(""), gobackButton = QPushButton("");
+  QVBoxLayout voidLayout, aboutLayout, mainLayout, buttonsLayout, legalLayout;
+  QHBoxLayout versionLayout, nameLayout, authorLayout, topLayout;
   QFont versionFont = appVersion.font(), nameFont = appName.font();
   QGraphicsDropShadowEffect windowShadow;
 

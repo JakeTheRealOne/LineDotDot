@@ -107,5 +107,6 @@ void SettingsMenu::toggle()
 void SettingsMenu::showAboutPage()
 {
   this->hide();
+  aboutPage.hideLegal();
   aboutPage.show();
 }
