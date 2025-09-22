@@ -2,7 +2,7 @@
 This is a Qt application that is litteraly a digital telegraph. (conversion and transmission of morse messages)
 
 # Important message
-The Windows application is not yet available, It is very unstable and major issues need to be fixed. Coming soon...
+The Windows application is not yet available, It is very unstable and major issues need to be fixed. Coming soon... (in like 20 or 30 years if I get bored of my other stuff)
 # Features
 - Convert any text to morse and vice versa
 - Extract from file / Embed into file (coming soon)
